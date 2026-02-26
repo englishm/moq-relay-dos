@@ -703,6 +703,8 @@ could reintroduce risks that were previously mitigated.
 | QUIC Stream Limits | Stream exhaustion | Baseline protection. When used as the primary request-limiting mechanism, configuration needs to account for security implications. |
 | QUIC Flow Control | Receiver memory exhaustion | Protects individual receivers but does not provide cross-session fairness or state exhaustion protection. |
 | Subscription Timeouts | Idle resource consumption | Lets relays reclaim resources from inactive subscriptions. |
+| MAX_AUTH_TOKEN_CACHE_SIZE | Memory consumption | Bounds total per-session bytes of registered authorization token aliases/values |
+| Control message length limit (2^16-1) | Oversized control-message parsing DoS | Bounds the size of each control message |
 
 When evaluating protocol changes,
 it is worth considering
