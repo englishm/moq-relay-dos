@@ -2026,6 +2026,16 @@ could reintroduce risks that were previously mitigated.<a href="#section-7.3-1" 
               <td class="text-left" rowspan="1" colspan="1">Idle resource consumption</td>
               <td class="text-left" rowspan="1" colspan="1">Lets relays reclaim resources from inactive subscriptions.</td>
             </tr>
+            <tr>
+              <td class="text-left" rowspan="1" colspan="1">MAX_AUTH_TOKEN_CACHE_SIZE</td>
+              <td class="text-left" rowspan="1" colspan="1">Memory consumption</td>
+              <td class="text-left" rowspan="1" colspan="1">Bounds total per-session bytes of registered authorization token aliases/values</td>
+            </tr>
+            <tr>
+              <td class="text-left" rowspan="1" colspan="1">Control message length limit (2^16-1)</td>
+              <td class="text-left" rowspan="1" colspan="1">Oversized control-message parsing DoS</td>
+              <td class="text-left" rowspan="1" colspan="1">Bounds the size of each control message</td>
+            </tr>
           </tbody>
         </table>
 <p id="section-7.3-3">When evaluating protocol changes,

@@ -567,30 +567,55 @@ Table of Contents
    mechanism that happens to be load-bearing for DoS prevention could
    reintroduce risks that were previously mitigated.
 
-   +================+=================+================================+
-   | Mechanism      | Threat          | Notes                          |
-   |                | Mitigated       |                                |
-   +================+=================+================================+
-   | MAX_REQUEST_ID | Rapid request   | Limits outstanding requests a  |
-   |                | flooding;       | peer can issue.  Any proposal  |
-   |                | unbounded       | to remove or change this needs |
-   |                | state           | to provide equivalent          |
-   |                | commitment      | protection.                    |
-   +----------------+-----------------+--------------------------------+
-   | QUIC Stream    | Stream          | Baseline protection.  When     |
-   | Limits         | exhaustion      | used as the primary request-   |
-   |                |                 | limiting mechanism,            |
-   |                |                 | configuration needs to account |
-   |                |                 | for security implications.     |
-   +----------------+-----------------+--------------------------------+
-   | QUIC Flow      | Receiver        | Protects individual receivers  |
-   | Control        | memory          | but does not provide cross-    |
-   |                | exhaustion      | session fairness or state      |
-   |                |                 | exhaustion protection.         |
-   +----------------+-----------------+--------------------------------+
-   | Subscription   | Idle resource   | Lets relays reclaim resources  |
-   | Timeouts       | consumption     | from inactive subscriptions.   |
-   +----------------+-----------------+--------------------------------+
+   +===========================+=================+=====================+
+   | Mechanism                 | Threat          | Notes               |
+   |                           | Mitigated       |                     |
+   +===========================+=================+=====================+
+   | MAX_REQUEST_ID            | Rapid request   | Limits outstanding  |
+   |                           | flooding;       | requests a peer     |
+   |                           | unbounded state | can issue.  Any     |
+   |                           | commitment      | proposal to remove  |
+   |                           |                 | or change this      |
+   |                           |                 | needs to provide    |
+   |                           |                 | equivalent          |
+   |                           |                 | protection.         |
+   +---------------------------+-----------------+---------------------+
+   | QUIC Stream Limits        | Stream          | Baseline            |
+   |                           | exhaustion      | protection.  When   |
+   |                           |                 | used as the         |
+   |                           |                 | primary request-    |
+   |                           |                 | limiting            |
+   |                           |                 | mechanism,          |
+   |                           |                 | configuration       |
+   |                           |                 | needs to account    |
+   |                           |                 | for security        |
+   |                           |                 | implications.       |
+   +---------------------------+-----------------+---------------------+
+   | QUIC Flow Control         | Receiver memory | Protects            |
+   |                           | exhaustion      | individual          |
+   |                           |                 | receivers but does  |
+   |                           |                 | not provide cross-  |
+   |                           |                 | session fairness    |
+   |                           |                 | or state            |
+   |                           |                 | exhaustion          |
+   |                           |                 | protection.         |
+   +---------------------------+-----------------+---------------------+
+   | Subscription Timeouts     | Idle resource   | Lets relays         |
+   |                           | consumption     | reclaim resources   |
+   |                           |                 | from inactive       |
+   |                           |                 | subscriptions.      |
+   +---------------------------+-----------------+---------------------+
+   | MAX_AUTH_TOKEN_CACHE_SIZE | Memory          | Bounds total per-   |
+   |                           | consumption     | session bytes of    |
+   |                           |                 | registered          |
+   |                           |                 | authorization       |
+   |                           |                 | token aliases/      |
+   |                           |                 | values              |
+   +---------------------------+-----------------+---------------------+
+   | Control message length    | Oversized       | Bounds the size of  |
+   | limit (2^16-1)            | control-message | each control        |
+   |                           | parsing DoS     | message             |
+   +---------------------------+-----------------+---------------------+
 
                                   Table 1
 
