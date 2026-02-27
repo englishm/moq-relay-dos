@@ -2,7 +2,7 @@
 
 # Denial-of-Service Considerations for Media over QUIC Relay Deployments
 
-This is the working area for the individual Internet-Draft, "TODO - Your title".
+This is the working area for the individual Internet-Draft, "Denial-of-Service Considerations for Media over QUIC Relay Deployments".
 
 * [Editor's Copy](https://englishm.github.io/moq-relay-dos/#go.draft-englishm-moq-relay-dos.html)
 * [Datatracker Page](https://datatracker.ietf.org/doc/draft-englishm-moq-relay-dos)
