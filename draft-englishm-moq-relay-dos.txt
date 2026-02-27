@@ -4,8 +4,8 @@
 
 Media Over QUIC                                               M. English
 Internet-Draft                                                Cloudflare
-Intended status: Informational                          26 February 2026
-Expires: 30 August 2026
+Intended status: Informational                          27 February 2026
+Expires: 31 August 2026
 
 
  Denial-of-Service Considerations for Media over QUIC Relay Deployments
@@ -59,7 +59,7 @@ Status of This Memo
    time.  It is inappropriate to use Internet-Drafts as reference
    material or to cite them other than as "work in progress."
 
-   This Internet-Draft will expire on 30 August 2026.
+   This Internet-Draft will expire on 31 August 2026.
 
 Copyright Notice
 
@@ -428,8 +428,9 @@ Table of Contents
 
 5.3.  Flow Control Limitations
 
-   QUIC flow control [QUIC] protects receivers from memory exhaustion,
-   but its protections have limits that are worth understanding:
+   QUIC flow control (Section 4 of [QUIC]) protects receivers from
+   memory exhaustion, but its protections have limits that are worth
+   understanding:
 
    Within a single MoQT session:  QUIC flow control operates at the
       connection and stream level.  MoQT's prioritization mechanism
@@ -642,25 +643,38 @@ Table of Contents
 10.1.  Normative References
 
    [MOQT]     Nandakumar, S., Vasiliev, V., Swett, I., and A. Frindell,
-              "Media over QUIC Transport", 2026,
-              <https://datatracker.ietf.org/doc/draft-ietf-moq-
-              transport/>.
+              "Media over QUIC Transport", Work in Progress, Internet-
+              Draft, draft-ietf-moq-transport-16, 13 January 2026,
+              <https://datatracker.ietf.org/doc/html/draft-ietf-moq-
+              transport-16>.
 
-   [QUIC]     Iyengar, J. and M. Thomson, "QUIC: A UDP-Based Multiplexed
-              and Secure Transport", RFC 9000, 2021,
+   [QUIC]     Iyengar, J., Ed. and M. Thomson, Ed., "QUIC: A UDP-Based
+              Multiplexed and Secure Transport", RFC 9000,
+              DOI 10.17487/RFC9000, May 2021,
               <https://www.rfc-editor.org/rfc/rfc9000>.
 
 10.2.  Informative References
 
-   [BCP72]    Rescorla, E. and B. Korver, "Guidelines for Writing RFC
-              Text on Security Considerations", RFC 3552, BCP 72, 2003,
-              <https://www.rfc-editor.org/rfc/rfc3552>.
+   [BCP72]    Best Current Practice 72,
+              <https://www.rfc-editor.org/info/bcp72>.
+              At the time of writing, this BCP comprises the following:
+
+              Rescorla, E. and B. Korver, "Guidelines for Writing RFC
+              Text on Security Considerations", BCP 72, RFC 3552,
+              DOI 10.17487/RFC3552, July 2003,
+              <https://www.rfc-editor.org/info/rfc3552>.
+
+              Gont, F. and I. Arce, "Security Considerations for
+              Transient Numeric Identifiers Employed in Network
+              Protocols", BCP 72, RFC 9416, DOI 10.17487/RFC9416, July
+              2023, <https://www.rfc-editor.org/info/rfc9416>.
 
    [HTTP2-RAPID-RESET]
               "HTTP/2 Rapid Reset Attack", 2023,
               <https://www.cve.org/CVERecord?id=CVE-2023-44487>.
 
-   [RFC9775]  Perkins, C., "IRTF Code of Conduct", RFC 9775, 2025,
+   [RFC9775]  Perkins, C. S., "IRTF Code of Conduct", RFC 9775,
+              DOI 10.17487/RFC9775, March 2025,
               <https://www.rfc-editor.org/rfc/rfc9775>.
 
 Contributors
