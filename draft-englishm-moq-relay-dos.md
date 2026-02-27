@@ -29,6 +29,10 @@ author:
     fullname: "Mike English"
     organization: Cloudflare
     email: "ietf@englishm.net"
+ -
+    fullname: "Aman Sharma"
+    organization: Meta
+    email: "amsharma@meta.com"
 
 normative:
   MOQT: I-D.draft-ietf-moq-transport
