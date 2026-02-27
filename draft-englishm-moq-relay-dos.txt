@@ -121,8 +121,8 @@ Table of Contents
    document.
 
    [BCP72] requires that protocol specifications identify potential
-   denial-of-service attacks and describe foreseeable risks with due
-   diligence.  The MoQT transport specification already addresses
+   denial-of-service (DoS) attacks and describe foreseeable risks with
+   due diligence.  The MoQT transport specification already addresses
    resource exhaustion, stream limits, flow control, and some relay-
    specific concerns.  This document provides more detailed analysis of
    the threat landscape — particularly for relay deployments where the
