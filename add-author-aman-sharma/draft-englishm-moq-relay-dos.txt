@@ -3,9 +3,10 @@
 
 
 Media Over QUIC                                               M. English
-Internet-Draft                                                Cloudflare
-Intended status: Informational                                 A. Sharma
-Expires: 31 August 2026                                             Meta
+Internet-Draft                                                 L. Pardue
+Intended status: Informational                                Cloudflare
+Expires: 31 August 2026                                        A. Sharma
+                                                                    Meta
                                                         27 February 2026
 
 
@@ -626,12 +627,13 @@ Table of Contents
 8.  Security Considerations
 
    This entire document addresses security considerations for MoQT relay
-   deployments.  The focus is on denial-of-service threats and resource
-   exhaustion; authentication, authorization, and billing are out of
-   scope but can be essential parts of a complete defense.  In
-   particular, the amplification properties described in Section 3.2
-   mean that effective DoS protection may require per-identity or per-
-   account limits beyond what the transport protocol alone can provide.
+   deployments.  It complements the MoQT Security Considerations.  The
+   focus is on denial-of-service threats and resource exhaustion;
+   authentication, authorization, and billing are out of scope but can
+   be essential parts of a complete defense.  In particular, the
+   amplification properties described in Section 3.2 mean that effective
+   DoS protection may require per-identity or per-account limits beyond
+   what the transport protocol alone can provide.
 
 9.  IANA Considerations
 
@@ -680,8 +682,6 @@ Contributors
 
    *  Ian Swett
 
-   *  Lucas Pardue
-
    *  Aman Sharma
 
    *  Cullen Jennings
@@ -708,6 +708,11 @@ Authors' Addresses
    Mike English
    Cloudflare
    Email: ietf@englishm.net
+
+
+   Lucas Pardue
+   Cloudflare
+   Email: lucas@lucaspardue.com
 
 
    Aman Sharma
