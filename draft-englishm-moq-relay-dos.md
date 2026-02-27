@@ -654,7 +654,8 @@ as usage patterns and hardware capabilities change.
 Limits calibrated relative to observed legitimate traffic patterns
 for the deployment tend to be more robust than fixed values.
 
-## Load-Bearing Mitigations
+# Tracking Protocol Load-Bearing Mitigations {#load-bearing-mitigations}
+{:removeinrfc="true"}
 
 Several MoQT protocol mechanisms serve as mitigations
 against resource exhaustion,
@@ -666,6 +667,11 @@ can be evaluated for their security impact,
 since removing or weakening a mechanism
 that happens to be load-bearing for DoS prevention
 could reintroduce risks that were previously mitigated.
+When evaluating protocol changes,
+it is worth considering
+whether existing mitigations are being preserved,
+replaced with equivalent mechanisms,
+or inadvertently weakened.
 
 | Mechanism | Threat Mitigated | Notes |
 | :--- | :--- | :--- |
@@ -675,12 +681,6 @@ could reintroduce risks that were previously mitigated.
 | Subscription Timeouts | Idle resource consumption | Lets relays reclaim resources from inactive subscriptions. |
 | MAX_AUTH_TOKEN_CACHE_SIZE | Memory consumption | Bounds total per-session bytes of registered authorization token aliases/values |
 | Control message length limit (2^16-1) | Oversized control-message parsing DoS | Bounds the size of each control message |
-
-When evaluating protocol changes,
-it is worth considering
-whether existing mitigations are being preserved,
-replaced with equivalent mechanisms,
-or inadvertently weakened.
 
 
 # Security Considerations
