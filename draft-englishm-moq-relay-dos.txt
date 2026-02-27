@@ -5,7 +5,9 @@
 Media Over QUIC                                               M. English
 Internet-Draft                                                 L. Pardue
 Intended status: Informational                                Cloudflare
-Expires: 31 August 2026                                 27 February 2026
+Expires: 31 August 2026                                        A. Sharma
+                                                                    Meta
+                                                        27 February 2026
 
 
  Denial-of-Service Considerations for Media over QUIC Relay Deployments
@@ -711,3 +713,8 @@ Authors' Addresses
    Lucas Pardue
    Cloudflare
    Email: lucas@lucaspardue.com
+
+
+   Aman Sharma
+   Meta
+   Email: amsharma@meta.com
