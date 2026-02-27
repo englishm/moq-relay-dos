@@ -75,7 +75,7 @@ This asymmetry is relevant to the denial-of-service risks
 discussed in this document.
 
 {{BCP72}} requires that protocol specifications
-identify potential denial-of-service attacks
+identify potential denial-of-service (DoS) attacks
 and describe foreseeable risks with due diligence.
 The MoQT transport specification already addresses
 resource exhaustion, stream limits, flow control,
