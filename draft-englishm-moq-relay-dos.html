@@ -1164,13 +1164,16 @@ focusing on the unique considerations for relays.<a href="#section-abstract-1" c
         </h2>
 <nav class="toc"><ul class="compact toc ulBare ulEmpty">
 <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.1">
-            <p id="section-toc.1-1.1.1" class="keepWithNext"><a href="#section-1" class="auto internal xref">1</a>.  <a href="#name-introduction" class="internal xref">Introduction</a></p>
+            <p id="section-toc.1-1.1.1"><a href="#section-1" class="auto internal xref">1</a>.  <a href="#name-introduction" class="internal xref">Introduction</a></p>
 <ul class="compact toc ulBare ulEmpty">
 <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.1.2.1">
-                <p id="section-toc.1-1.1.2.1.1" class="keepWithNext"><a href="#section-1.1" class="auto internal xref">1.1</a>.  <a href="#name-scope" class="internal xref">Scope</a></p>
+                <p id="section-toc.1-1.1.2.1.1" class="keepWithNext"><a href="#section-1.1" class="auto internal xref">1.1</a>.  <a href="#name-motivation" class="internal xref">Motivation</a></p>
 </li>
               <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.1.2.2">
-                <p id="section-toc.1-1.1.2.2.1" class="keepWithNext"><a href="#section-1.2" class="auto internal xref">1.2</a>.  <a href="#name-relationship-to-the-transpo" class="internal xref">Relationship to the Transport Specification</a></p>
+                <p id="section-toc.1-1.1.2.2.1" class="keepWithNext"><a href="#section-1.2" class="auto internal xref">1.2</a>.  <a href="#name-scope" class="internal xref">Scope</a></p>
+</li>
+              <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.1.2.3">
+                <p id="section-toc.1-1.1.2.3.1" class="keepWithNext"><a href="#section-1.3" class="auto internal xref">1.3</a>.  <a href="#name-relationship-to-the-transpo" class="internal xref">Relationship to the Transport Specification</a></p>
 </li>
             </ul>
 </li>
@@ -1315,24 +1318,32 @@ This document provides more detailed analysis of the threat landscape —
 particularly for relay deployments
 where the amplification properties of the protocol are most relevant —
 along with operational guidance for implementers and operators.<a href="#section-1-2" class="pilcrow">¶</a></p>
-<p id="section-1-3">This work was motivated by discussion
+<div id="motivation">
+<section id="section-1.1">
+        <h3 id="name-motivation">
+<a href="#section-1.1" class="section-number selfRef">1.1. </a><a href="#name-motivation" class="section-name selfRef">Motivation</a>
+        </h3>
+<p id="section-1.1-1">This section is to be removed before publishing as an RFC.<a href="#section-1.1-1" class="pilcrow">¶</a></p>
+<p id="section-1.1-2">This work was motivated by discussion
 at the MoQ Working Group interim meeting in February 2026.
 The working group decided that detailed DoS analysis
 and operational guidance warranted a separate document
-rather than additions to the transport specification.<a href="#section-1-3" class="pilcrow">¶</a></p>
+rather than additions to the transport specification.<a href="#section-1.1-2" class="pilcrow">¶</a></p>
+</section>
+</div>
 <div id="scope">
-<section id="section-1.1">
+<section id="section-1.2">
         <h3 id="name-scope">
-<a href="#section-1.1" class="section-number selfRef">1.1. </a><a href="#name-scope" class="section-name selfRef">Scope</a>
+<a href="#section-1.2" class="section-number selfRef">1.2. </a><a href="#name-scope" class="section-name selfRef">Scope</a>
         </h3>
-<p id="section-1.1-1">This document covers denial-of-service
+<p id="section-1.2-1">This document covers denial-of-service
 and resource exhaustion threats to MoQT relay deployments.
 Authentication, authorization, and billing mechanisms are out of scope,
 though they can be critical tools for DoS mitigation in practice
 and are referenced where relevant.
 Content filtering mechanisms and their resource costs
-are also deferred to future work.<a href="#section-1.1-1" class="pilcrow">¶</a></p>
-<p id="section-1.1-2">Where this document identifies potential changes
+are also deferred to future work.<a href="#section-1.2-1" class="pilcrow">¶</a></p>
+<p id="section-1.2-2">Where this document identifies potential changes
 to the transport protocol that could improve DoS resilience,
 those are noted
 but left to proposals against the transport specification.
@@ -1342,15 +1353,15 @@ this document also catalogs mechanisms
 that are currently load-bearing for DoS resilience
 (<a href="#load-bearing-mitigations" class="auto internal xref">Section 7.3</a>)
 so that changes elsewhere
-do not inadvertently weaken existing protections.<a href="#section-1.1-2" class="pilcrow">¶</a></p>
+do not inadvertently weaken existing protections.<a href="#section-1.2-2" class="pilcrow">¶</a></p>
 </section>
 </div>
 <div id="relationship-to-the-transport-specification">
-<section id="section-1.2">
+<section id="section-1.3">
         <h3 id="name-relationship-to-the-transpo">
-<a href="#section-1.2" class="section-number selfRef">1.2. </a><a href="#name-relationship-to-the-transpo" class="section-name selfRef">Relationship to the Transport Specification</a>
+<a href="#section-1.3" class="section-number selfRef">1.3. </a><a href="#name-relationship-to-the-transpo" class="section-name selfRef">Relationship to the Transport Specification</a>
         </h3>
-<p id="section-1.2-1">The MoQT transport specification <span>[<a href="#MOQT" class="cite xref">MOQT</a>]</span> already covers
+<p id="section-1.3-1">The MoQT transport specification <span>[<a href="#MOQT" class="cite xref">MOQT</a>]</span> already covers
 stream limits, flow control, priority and starvation, timeouts,
 and some relay-specific concerns
 (state maintenance, SUBSCRIBE_NAMESPACE with short prefixes).
@@ -1358,7 +1369,7 @@ This document does not replace any of that.
 It adds threat analysis,
 documents which existing mechanisms are load-bearing
 for DoS prevention,
-and provides operational guidance for relay deployments.<a href="#section-1.2-1" class="pilcrow">¶</a></p>
+and provides operational guidance for relay deployments.<a href="#section-1.3-1" class="pilcrow">¶</a></p>
 </section>
 </div>
 </section>
