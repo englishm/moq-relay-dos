@@ -665,38 +665,14 @@ whether existing mitigations are being preserved,
 replaced with equivalent mechanisms,
 or inadvertently weakened.
 
-MoQT MAX_REQUEST_ID:
-
-: limits outstanding requests a peer can issue. This helps mitigate
-rapid request flooding and unbounded state commitment. Any proposal to remove or
-change this needs to provide equivalent protection.
-
-QUIC stream limits:
-
-: can help mitigate stream exhaustion. When used as the primary
-request-limiting mechanism, configuration needs to account for security
-implications.
-
-QUIC stream and connection flow control:
-
-: can help mitigate receiver memory
-exhaustion. However, it protects individual receivers but does not provide
-cross-session fairness or state exhaustion protection.
-
-MoQT subscription timeouts:
-
-: can help mitigate idle resource consumption, since it
-lets relays reclaim resources from inactive subscriptions.
-
-MoQT MAX_AUTH_TOKEN_CACHE_SIZE:
-
-: can help limit memory consumption via bounding
-total per-session bytes of registered authorization token aliases/values.
-
-MoQT control message length:
-
-: the limit (2<sup>16</sup>-1) bounds the size of each
-control message and can help mitigate control-message parsing DoS.
+| Mechanism | Threat Mitigated | Notes |
+| :--- | :--- | :--- |
+| MAX_REQUEST_ID | Rapid request flooding; unbounded state commitment | Limits outstanding requests a peer can issue. Any proposal to remove or change this needs to provide equivalent protection. |
+| QUIC Stream Limits | Stream exhaustion | Baseline protection. When used as the primary request-limiting mechanism, configuration needs to account for security implications. |
+| QUIC Flow Control | Receiver memory exhaustion | Protects individual receivers but does not provide cross-session fairness or state exhaustion protection. |
+| Subscription Timeouts | Idle resource consumption | Lets relays reclaim resources from inactive subscriptions. |
+| MAX_AUTH_TOKEN_CACHE_SIZE | Memory consumption | Bounds total per-session bytes of registered authorization token aliases/values |
+| Control message length limit (2^16-1) | Oversized control-message parsing DoS | Bounds the size of each control message |
 
 
 # Security Considerations
