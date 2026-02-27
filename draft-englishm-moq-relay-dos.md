@@ -33,6 +33,10 @@ author:
     fullname: "Lucas Pardue"
     organization: Cloudflare
     email: "lucas@lucaspardue.com"
+ -
+    fullname: "Aman Sharma"
+    organization: Meta
+    email: "amsharma@meta.com"
 
 normative:
   MOQT: I-D.draft-ietf-moq-transport
