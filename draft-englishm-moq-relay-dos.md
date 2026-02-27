@@ -30,6 +30,10 @@ author:
     organization: Cloudflare
     email: "ietf@englishm.net"
  -
+    fullname: "Lucas Pardue"
+    organization: Cloudflare
+    email: "lucas@lucaspardue.com"
+ -
     fullname: "Aman Sharma"
     organization: Meta
     email: "amsharma@meta.com"
@@ -682,7 +686,7 @@ or inadvertently weakened.
 # Security Considerations
 
 This entire document addresses security considerations
-for MoQT relay deployments.
+for MoQT relay deployments. It complements the MoQT Security Considerations.
 The focus is on denial-of-service threats and resource exhaustion;
 authentication, authorization, and billing are out of scope
 but can be essential parts of a complete defense.
@@ -705,7 +709,6 @@ This document has no IANA actions.
 {:numbered="false"}
 
 - Ian Swett
-- Lucas Pardue
 - Aman Sharma
 - Cullen Jennings
 - Will Law
