@@ -3,9 +3,9 @@
 
 
 Media Over QUIC                                               M. English
-Internet-Draft                                                Cloudflare
-Intended status: Informational                          27 February 2026
-Expires: 31 August 2026
+Internet-Draft                                                 L. Pardue
+Intended status: Informational                                Cloudflare
+Expires: 31 August 2026                                 27 February 2026
 
 
  Denial-of-Service Considerations for Media over QUIC Relay Deployments
@@ -105,7 +105,7 @@ Table of Contents
      10.2.  Informative References
    Contributors
    Use of Generative AI
-   Author's Address
+   Authors' Addresses
 
 1.  Introduction
 
@@ -680,8 +680,6 @@ Contributors
 
    *  Ian Swett
 
-   *  Lucas Pardue
-
    *  Aman Sharma
 
    *  Cullen Jennings
@@ -703,8 +701,13 @@ Use of Generative AI
    follows the guidance in [RFC9775], applied voluntarily to this IETF
    document.
 
-Author's Address
+Authors' Addresses
 
    Mike English
    Cloudflare
    Email: ietf@englishm.net
+
+
+   Lucas Pardue
+   Cloudflare
+   Email: lucas@lucaspardue.com
