@@ -29,6 +29,10 @@ author:
     fullname: "Mike English"
     organization: Cloudflare
     email: "ietf@englishm.net"
+ -
+    fullname: "Lucas Pardue"
+    organization: Cloudflare
+    email: "lucas@lucaspardue.com"
 
 normative:
   MOQT: I-D.draft-ietf-moq-transport
@@ -701,7 +705,6 @@ This document has no IANA actions.
 {:numbered="false"}
 
 - Ian Swett
-- Lucas Pardue
 - Aman Sharma
 - Cullen Jennings
 - Will Law
