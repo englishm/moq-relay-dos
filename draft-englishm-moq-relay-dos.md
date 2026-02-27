@@ -31,48 +31,19 @@ author:
     email: "ietf@englishm.net"
 
 normative:
-  MOQT:
-    title: "Media over QUIC Transport"
-    target: https://datatracker.ietf.org/doc/draft-ietf-moq-transport/
-    author:
-      - name: Suhas Nandakumar
-      - name: Victor Vasiliev
-      - name: Ian Swett
-      - name: Alan Frindell
-    date: 2026
-  QUIC:
-    title: "QUIC: A UDP-Based Multiplexed and Secure Transport"
-    target: https://www.rfc-editor.org/rfc/rfc9000
-    author:
-      - name: Jana Iyengar
-      - name: Martin Thomson
-    date: 2021
-    seriesinfo:
-      RFC: 9000
+  MOQT: I-D.draft-ietf-moq-transport
+  RFC9000:
+    display: QUIC
+
 
 informative:
   BCP72:
-    title: "Guidelines for Writing RFC Text on Security Considerations"
-    target: https://www.rfc-editor.org/rfc/rfc3552
-    author:
-      - name: Eric Rescorla
-      - name: Brian Korver
-    date: 2003
-    seriesinfo:
-      RFC: 3552
-      BCP: 72
+  RFC9775:
   HTTP2-RAPID-RESET:
     title: "HTTP/2 Rapid Reset Attack"
     target: https://www.cve.org/CVERecord?id=CVE-2023-44487
     date: 2023
-  RFC9775:
-    title: "IRTF Code of Conduct"
-    target: https://www.rfc-editor.org/rfc/rfc9775
-    author:
-      - name: Colin Perkins
-    date: 2025
-    seriesinfo:
-      RFC: 9775
+
 
 --- abstract
 
@@ -509,7 +480,7 @@ or reduce delivery quality.
 
 ## Flow Control Limitations
 
-QUIC flow control {{QUIC}} protects receivers
+QUIC flow control ({{Section 4 of RFC9000}}) protects receivers
 from memory exhaustion,
 but its protections have limits that are worth understanding:
 
