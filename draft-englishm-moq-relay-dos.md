@@ -47,26 +47,14 @@ informative:
 
 --- abstract
 
-Media over QUIC Transport (MoQT) relays
-forward, fan out, and optionally cache media content
-on behalf of publishers and subscribers.
-The protocol's amplification properties —
-where a single subscriber action can trigger
-disproportionate resource commitment at the relay —
-create denial-of-service risks
+The Media over QUIC Transport (MoQT) protocol
+presents denial-of-service risks
 that differ in character
 from those facing typical request-response protocols.
-
-This document analyzes those risks
-for MoQT relay deployments.
-It identifies threat actors and attack surfaces,
-examines resource exhaustion vectors
-across both signaling and media delivery,
-and provides operational guidance
-for relay implementers and operators.
-It is intended to complement
-the MoQT transport specification's Security Considerations section,
-not replace it.
+MoQT relays forward, fan out, and optionally cache media content
+on behalf of publishers and subscribers.
+This document complements the MoQT Security Considerations,
+focusing on the unique considerations for relays.
 
 
 --- middle
