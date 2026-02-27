@@ -85,6 +85,9 @@ particularly for relay deployments
 where the amplification properties of the protocol are most relevant —
 along with operational guidance for implementers and operators.
 
+## Motivation
+{:removeinrfc="true"}
+
 This work was motivated by discussion
 at the MoQ Working Group interim meeting in February 2026.
 The working group decided that detailed DoS analysis
