@@ -1266,36 +1266,36 @@ focusing on the unique considerations for relays.<a href="#section-abstract-1" c
               <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.7.2.2">
                 <p id="section-toc.1-1.7.2.2.1"><a href="#section-7.2" class="auto internal xref">7.2</a>.  <a href="#name-rate-limiting" class="internal xref">Rate Limiting</a></p>
 </li>
-              <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.7.2.3">
-                <p id="section-toc.1-1.7.2.3.1"><a href="#section-7.3" class="auto internal xref">7.3</a>.  <a href="#name-load-bearing-mitigations" class="internal xref">Load-Bearing Mitigations</a></p>
-</li>
             </ul>
 </li>
           <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.8">
-            <p id="section-toc.1-1.8.1"><a href="#section-8" class="auto internal xref">8</a>.  <a href="#name-security-considerations" class="internal xref">Security Considerations</a></p>
+            <p id="section-toc.1-1.8.1"><a href="#section-8" class="auto internal xref">8</a>.  <a href="#name-tracking-protocol-load-bear" class="internal xref">Tracking Protocol Load-Bearing Mitigations</a></p>
 </li>
           <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.9">
-            <p id="section-toc.1-1.9.1"><a href="#section-9" class="auto internal xref">9</a>.  <a href="#name-iana-considerations" class="internal xref">IANA Considerations</a></p>
+            <p id="section-toc.1-1.9.1"><a href="#section-9" class="auto internal xref">9</a>.  <a href="#name-security-considerations" class="internal xref">Security Considerations</a></p>
 </li>
           <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.10">
-            <p id="section-toc.1-1.10.1"><a href="#section-10" class="auto internal xref">10</a>. <a href="#name-references" class="internal xref">References</a></p>
-<ul class="compact toc ulBare ulEmpty">
-<li class="compact toc ulBare ulEmpty" id="section-toc.1-1.10.2.1">
-                <p id="section-toc.1-1.10.2.1.1"><a href="#section-10.1" class="auto internal xref">10.1</a>.  <a href="#name-normative-references" class="internal xref">Normative References</a></p>
+            <p id="section-toc.1-1.10.1"><a href="#section-10" class="auto internal xref">10</a>. <a href="#name-iana-considerations" class="internal xref">IANA Considerations</a></p>
 </li>
-              <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.10.2.2">
-                <p id="section-toc.1-1.10.2.2.1"><a href="#section-10.2" class="auto internal xref">10.2</a>.  <a href="#name-informative-references" class="internal xref">Informative References</a></p>
+          <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.11">
+            <p id="section-toc.1-1.11.1"><a href="#section-11" class="auto internal xref">11</a>. <a href="#name-references" class="internal xref">References</a></p>
+<ul class="compact toc ulBare ulEmpty">
+<li class="compact toc ulBare ulEmpty" id="section-toc.1-1.11.2.1">
+                <p id="section-toc.1-1.11.2.1.1"><a href="#section-11.1" class="auto internal xref">11.1</a>.  <a href="#name-normative-references" class="internal xref">Normative References</a></p>
+</li>
+              <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.11.2.2">
+                <p id="section-toc.1-1.11.2.2.1"><a href="#section-11.2" class="auto internal xref">11.2</a>.  <a href="#name-informative-references" class="internal xref">Informative References</a></p>
 </li>
             </ul>
 </li>
-          <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.11">
-            <p id="section-toc.1-1.11.1"><a href="#appendix-A" class="auto internal xref"></a><a href="#name-contributors" class="internal xref">Contributors</a></p>
-</li>
           <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.12">
-            <p id="section-toc.1-1.12.1"><a href="#appendix-B" class="auto internal xref"></a><a href="#name-use-of-generative-ai" class="internal xref">Use of Generative AI</a></p>
+            <p id="section-toc.1-1.12.1"><a href="#appendix-A" class="auto internal xref"></a><a href="#name-contributors" class="internal xref">Contributors</a></p>
 </li>
           <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.13">
-            <p id="section-toc.1-1.13.1"><a href="#appendix-C" class="auto internal xref"></a><a href="#name-authors-addresses" class="internal xref">Authors' Addresses</a></p>
+            <p id="section-toc.1-1.13.1"><a href="#appendix-B" class="auto internal xref"></a><a href="#name-use-of-generative-ai" class="internal xref">Use of Generative AI</a></p>
+</li>
+          <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.14">
+            <p id="section-toc.1-1.14.1"><a href="#appendix-C" class="auto internal xref"></a><a href="#name-authors-addresses" class="internal xref">Authors' Addresses</a></p>
 </li>
         </ul>
 </nav>
@@ -1361,7 +1361,7 @@ While both this document and the transport specification
 are under active development,
 this document also catalogs mechanisms
 that are currently load-bearing for DoS resilience
-(<a href="#load-bearing-mitigations" class="auto internal xref">Section 7.3</a>)
+(<a href="#load-bearing-mitigations" class="auto internal xref">Section 8</a>)
 so that changes elsewhere
 do not inadvertently weaken existing protections.<a href="#section-1.2-2" class="pilcrow">¶</a></p>
 </section>
@@ -1980,12 +1980,15 @@ Limits calibrated relative to observed legitimate traffic patterns
 for the deployment tend to be more robust than fixed values.<a href="#section-7.2-5" class="pilcrow">¶</a></p>
 </section>
 </div>
+</section>
+</div>
 <div id="load-bearing-mitigations">
-<section id="section-7.3">
-        <h3 id="name-load-bearing-mitigations">
-<a href="#section-7.3" class="section-number selfRef">7.3. </a><a href="#name-load-bearing-mitigations" class="section-name selfRef">Load-Bearing Mitigations</a>
-        </h3>
-<p id="section-7.3-1">Several MoQT protocol mechanisms serve as mitigations
+<section id="section-8">
+      <h2 id="name-tracking-protocol-load-bear">
+<a href="#section-8" class="section-number selfRef">8. </a><a href="#name-tracking-protocol-load-bear" class="section-name selfRef">Tracking Protocol Load-Bearing Mitigations</a>
+      </h2>
+<p id="section-8-1">This section is to be removed before publishing as an RFC.<a href="#section-8-1" class="pilcrow">¶</a></p>
+<p id="section-8-2">Several MoQT protocol mechanisms serve as mitigations
 against resource exhaustion,
 even if some of them were not originally designed
 with that as their primary purpose.
@@ -1994,64 +1997,62 @@ so that proposed changes to the protocol
 can be evaluated for their security impact,
 since removing or weakening a mechanism
 that happens to be load-bearing for DoS prevention
-could reintroduce risks that were previously mitigated.<a href="#section-7.3-1" class="pilcrow">¶</a></p>
-<table class="center" id="table-1">
-          <caption><a href="#table-1" class="selfRef">Table 1</a></caption>
-<thead>
-            <tr>
-              <th class="text-left" rowspan="1" colspan="1">Mechanism</th>
-              <th class="text-left" rowspan="1" colspan="1">Threat Mitigated</th>
-              <th class="text-left" rowspan="1" colspan="1">Notes</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr>
-              <td class="text-left" rowspan="1" colspan="1">MAX_REQUEST_ID</td>
-              <td class="text-left" rowspan="1" colspan="1">Rapid request flooding; unbounded state commitment</td>
-              <td class="text-left" rowspan="1" colspan="1">Limits outstanding requests a peer can issue. Any proposal to remove or change this needs to provide equivalent protection.</td>
-            </tr>
-            <tr>
-              <td class="text-left" rowspan="1" colspan="1">QUIC Stream Limits</td>
-              <td class="text-left" rowspan="1" colspan="1">Stream exhaustion</td>
-              <td class="text-left" rowspan="1" colspan="1">Baseline protection. When used as the primary request-limiting mechanism, configuration needs to account for security implications.</td>
-            </tr>
-            <tr>
-              <td class="text-left" rowspan="1" colspan="1">QUIC Flow Control</td>
-              <td class="text-left" rowspan="1" colspan="1">Receiver memory exhaustion</td>
-              <td class="text-left" rowspan="1" colspan="1">Protects individual receivers but does not provide cross-session fairness or state exhaustion protection.</td>
-            </tr>
-            <tr>
-              <td class="text-left" rowspan="1" colspan="1">Subscription Timeouts</td>
-              <td class="text-left" rowspan="1" colspan="1">Idle resource consumption</td>
-              <td class="text-left" rowspan="1" colspan="1">Lets relays reclaim resources from inactive subscriptions.</td>
-            </tr>
-            <tr>
-              <td class="text-left" rowspan="1" colspan="1">MAX_AUTH_TOKEN_CACHE_SIZE</td>
-              <td class="text-left" rowspan="1" colspan="1">Memory consumption</td>
-              <td class="text-left" rowspan="1" colspan="1">Bounds total per-session bytes of registered authorization token aliases/values</td>
-            </tr>
-            <tr>
-              <td class="text-left" rowspan="1" colspan="1">Control message length limit (2^16-1)</td>
-              <td class="text-left" rowspan="1" colspan="1">Oversized control-message parsing DoS</td>
-              <td class="text-left" rowspan="1" colspan="1">Bounds the size of each control message</td>
-            </tr>
-          </tbody>
-        </table>
-<p id="section-7.3-3">When evaluating protocol changes,
+could reintroduce risks that were previously mitigated.
+When evaluating protocol changes,
 it is worth considering
 whether existing mitigations are being preserved,
 replaced with equivalent mechanisms,
-or inadvertently weakened.<a href="#section-7.3-3" class="pilcrow">¶</a></p>
-</section>
-</div>
+or inadvertently weakened.<a href="#section-8-2" class="pilcrow">¶</a></p>
+<table class="center" id="table-1">
+        <caption><a href="#table-1" class="selfRef">Table 1</a></caption>
+<thead>
+          <tr>
+            <th class="text-left" rowspan="1" colspan="1">Mechanism</th>
+            <th class="text-left" rowspan="1" colspan="1">Threat Mitigated</th>
+            <th class="text-left" rowspan="1" colspan="1">Notes</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td class="text-left" rowspan="1" colspan="1">MAX_REQUEST_ID</td>
+            <td class="text-left" rowspan="1" colspan="1">Rapid request flooding; unbounded state commitment</td>
+            <td class="text-left" rowspan="1" colspan="1">Limits outstanding requests a peer can issue. Any proposal to remove or change this needs to provide equivalent protection.</td>
+          </tr>
+          <tr>
+            <td class="text-left" rowspan="1" colspan="1">QUIC Stream Limits</td>
+            <td class="text-left" rowspan="1" colspan="1">Stream exhaustion</td>
+            <td class="text-left" rowspan="1" colspan="1">Baseline protection. When used as the primary request-limiting mechanism, configuration needs to account for security implications.</td>
+          </tr>
+          <tr>
+            <td class="text-left" rowspan="1" colspan="1">QUIC Flow Control</td>
+            <td class="text-left" rowspan="1" colspan="1">Receiver memory exhaustion</td>
+            <td class="text-left" rowspan="1" colspan="1">Protects individual receivers but does not provide cross-session fairness or state exhaustion protection.</td>
+          </tr>
+          <tr>
+            <td class="text-left" rowspan="1" colspan="1">Subscription Timeouts</td>
+            <td class="text-left" rowspan="1" colspan="1">Idle resource consumption</td>
+            <td class="text-left" rowspan="1" colspan="1">Lets relays reclaim resources from inactive subscriptions.</td>
+          </tr>
+          <tr>
+            <td class="text-left" rowspan="1" colspan="1">MAX_AUTH_TOKEN_CACHE_SIZE</td>
+            <td class="text-left" rowspan="1" colspan="1">Memory consumption</td>
+            <td class="text-left" rowspan="1" colspan="1">Bounds total per-session bytes of registered authorization token aliases/values</td>
+          </tr>
+          <tr>
+            <td class="text-left" rowspan="1" colspan="1">Control message length limit (2^16-1)</td>
+            <td class="text-left" rowspan="1" colspan="1">Oversized control-message parsing DoS</td>
+            <td class="text-left" rowspan="1" colspan="1">Bounds the size of each control message</td>
+          </tr>
+        </tbody>
+      </table>
 </section>
 </div>
 <div id="security-considerations">
-<section id="section-8">
+<section id="section-9">
       <h2 id="name-security-considerations">
-<a href="#section-8" class="section-number selfRef">8. </a><a href="#name-security-considerations" class="section-name selfRef">Security Considerations</a>
+<a href="#section-9" class="section-number selfRef">9. </a><a href="#name-security-considerations" class="section-name selfRef">Security Considerations</a>
       </h2>
-<p id="section-8-1">This entire document addresses security considerations
+<p id="section-9-1">This entire document addresses security considerations
 for MoQT relay deployments. It complements the MoQT Security Considerations.
 The focus is on denial-of-service threats and resource exhaustion;
 authentication, authorization, and billing are out of scope
@@ -2061,26 +2062,26 @@ the amplification properties
 described in <a href="#amplification-properties" class="auto internal xref">Section 3.2</a>
 mean that effective DoS protection
 may require per-identity or per-account limits
-beyond what the transport protocol alone can provide.<a href="#section-8-1" class="pilcrow">¶</a></p>
+beyond what the transport protocol alone can provide.<a href="#section-9-1" class="pilcrow">¶</a></p>
 </section>
 </div>
 <div id="iana-considerations">
-<section id="section-9">
+<section id="section-10">
       <h2 id="name-iana-considerations">
-<a href="#section-9" class="section-number selfRef">9. </a><a href="#name-iana-considerations" class="section-name selfRef">IANA Considerations</a>
+<a href="#section-10" class="section-number selfRef">10. </a><a href="#name-iana-considerations" class="section-name selfRef">IANA Considerations</a>
       </h2>
-<p id="section-9-1">This document has no IANA actions.<a href="#section-9-1" class="pilcrow">¶</a></p>
+<p id="section-10-1">This document has no IANA actions.<a href="#section-10-1" class="pilcrow">¶</a></p>
 </section>
 </div>
 <div id="sec-combined-references">
-<section id="section-10">
+<section id="section-11">
       <h2 id="name-references">
-<a href="#section-10" class="section-number selfRef">10. </a><a href="#name-references" class="section-name selfRef">References</a>
+<a href="#section-11" class="section-number selfRef">11. </a><a href="#name-references" class="section-name selfRef">References</a>
       </h2>
 <div id="sec-normative-references">
-<section id="section-10.1">
+<section id="section-11.1">
         <h3 id="name-normative-references">
-<a href="#section-10.1" class="section-number selfRef">10.1. </a><a href="#name-normative-references" class="section-name selfRef">Normative References</a>
+<a href="#section-11.1" class="section-number selfRef">11.1. </a><a href="#name-normative-references" class="section-name selfRef">Normative References</a>
         </h3>
 <dl class="references">
 <dt id="MOQT">[MOQT]</dt>
@@ -2095,9 +2096,9 @@ beyond what the transport protocol alone can provide.<a href="#section-8-1" clas
 </section>
 </div>
 <div id="sec-informative-references">
-<section id="section-10.2">
+<section id="section-11.2">
         <h3 id="name-informative-references">
-<a href="#section-10.2" class="section-number selfRef">10.2. </a><a href="#name-informative-references" class="section-name selfRef">Informative References</a>
+<a href="#section-11.2" class="section-number selfRef">11.2. </a><a href="#name-informative-references" class="section-name selfRef">Informative References</a>
         </h3>
 <dl class="references">
 <dt id="BCP72">[BCP72]</dt>

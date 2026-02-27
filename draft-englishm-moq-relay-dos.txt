@@ -99,12 +99,12 @@ Table of Contents
    7.  Operational Recommendations
      7.1.  Cost Tracking
      7.2.  Rate Limiting
-     7.3.  Load-Bearing Mitigations
-   8.  Security Considerations
-   9.  IANA Considerations
-   10. References
-     10.1.  Normative References
-     10.2.  Informative References
+   8.  Tracking Protocol Load-Bearing Mitigations
+   9.  Security Considerations
+   10. IANA Considerations
+   11. References
+     11.1.  Normative References
+     11.2.  Informative References
    Contributors
    Use of Generative AI
    Authors' Addresses
@@ -154,8 +154,8 @@ Table of Contents
    to proposals against the transport specification.  While both this
    document and the transport specification are under active
    development, this document also catalogs mechanisms that are
-   currently load-bearing for DoS resilience (Section 7.3) so that
-   changes elsewhere do not inadvertently weaken existing protections.
+   currently load-bearing for DoS resilience (Section 8) so that changes
+   elsewhere do not inadvertently weaken existing protections.
 
 1.3.  Relationship to the Transport Specification
 
@@ -558,7 +558,9 @@ Table of Contents
    calibrated relative to observed legitimate traffic patterns for the
    deployment tend to be more robust than fixed values.
 
-7.3.  Load-Bearing Mitigations
+8.  Tracking Protocol Load-Bearing Mitigations
+
+   This section is to be removed before publishing as an RFC.
 
    Several MoQT protocol mechanisms serve as mitigations against
    resource exhaustion, even if some of them were not originally
@@ -566,7 +568,10 @@ Table of Contents
    these explicitly so that proposed changes to the protocol can be
    evaluated for their security impact, since removing or weakening a
    mechanism that happens to be load-bearing for DoS prevention could
-   reintroduce risks that were previously mitigated.
+   reintroduce risks that were previously mitigated.  When evaluating
+   protocol changes, it is worth considering whether existing
+   mitigations are being preserved, replaced with equivalent mechanisms,
+   or inadvertently weakened.
 
    +===========================+=================+=====================+
    | Mechanism                 | Threat          | Notes               |
@@ -620,11 +625,7 @@ Table of Contents
 
                                   Table 1
 
-   When evaluating protocol changes, it is worth considering whether
-   existing mitigations are being preserved, replaced with equivalent
-   mechanisms, or inadvertently weakened.
-
-8.  Security Considerations
+9.  Security Considerations
 
    This entire document addresses security considerations for MoQT relay
    deployments.  It complements the MoQT Security Considerations.  The
@@ -635,13 +636,13 @@ Table of Contents
    DoS protection may require per-identity or per-account limits beyond
    what the transport protocol alone can provide.
 
-9.  IANA Considerations
+10.  IANA Considerations
 
    This document has no IANA actions.
 
-10.  References
+11.  References
 
-10.1.  Normative References
+11.1.  Normative References
 
    [MOQT]     Nandakumar, S., Vasiliev, V., Swett, I., and A. Frindell,
               "Media over QUIC Transport", Work in Progress, Internet-
@@ -654,7 +655,7 @@ Table of Contents
               DOI 10.17487/RFC9000, May 2021,
               <https://www.rfc-editor.org/rfc/rfc9000>.
 
-10.2.  Informative References
+11.2.  Informative References
 
    [BCP72]    Best Current Practice 72,
               <https://www.rfc-editor.org/info/bcp72>.
