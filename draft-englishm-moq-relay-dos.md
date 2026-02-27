@@ -678,7 +678,7 @@ or inadvertently weakened.
 # Security Considerations
 
 This entire document addresses security considerations
-for MoQT relay deployments.
+for MoQT relay deployments. It complements the MoQT Security Considerations.
 The focus is on denial-of-service threats and resource exhaustion;
 authentication, authorization, and billing are out of scope
 but can be essential parts of a complete defense.
