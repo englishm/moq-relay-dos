@@ -1,6 +1,6 @@
 {
   "magic": "E!vIA5L86J2I",
-  "timestamp": "2026-02-26T00:21:08.099456+00:00",
+  "timestamp": "2026-03-01T00:25:13.255248+00:00",
   "repo": "englishm/moq-relay-dos",
   "labels": [
     {
@@ -49,6 +49,725 @@
       "color": "ffffff"
     }
   ],
-  "issues": [],
-  "pulls": []
+  "issues": [
+    {
+      "number": 2,
+      "id": "I_kwDORYPFcs7uSPI4",
+      "title": "FETCH storms causing cache thrashing: add some text for it?",
+      "url": "https://github.com/englishm/moq-relay-dos/issues/2",
+      "state": "OPEN",
+      "author": "sharmafb",
+      "authorAssociation": "CONTRIBUTOR",
+      "assignees": [],
+      "labels": [],
+      "body": "Many concurrent FETCHes can cause cache thrashing at a relay by pushing the combined working set beyond the relay\u2019s cache/buffer budget. The relay then evicts objects that are still needed by other in-flight fetches, leading to an evict/refetch loop that amplifies upstream load and drops the effective cache hit rate.",
+      "createdAt": "2026-02-26T21:07:23Z",
+      "updatedAt": "2026-02-26T21:07:23Z",
+      "closedAt": null,
+      "comments": []
+    },
+    {
+      "number": 4,
+      "id": "I_kwDORYPFcs7uTS96",
+      "title": "GOAWAY redirect amplification attack",
+      "url": "https://github.com/englishm/moq-relay-dos/issues/4",
+      "state": "OPEN",
+      "author": "sharmafb",
+      "authorAssociation": "CONTRIBUTOR",
+      "assignees": [],
+      "labels": [],
+      "body": "The GOAWAY message includes a New Session URI field, and the transport spec states that clients \"MUST use this URI for the new session if provided.\" A misbehaving relay could exploit this by accumulating a large number of connected clients over time, then sending GOAWAY to all of them with a New Session URI pointing to a victim server.",
+      "createdAt": "2026-02-26T22:18:04Z",
+      "updatedAt": "2026-02-26T22:18:04Z",
+      "closedAt": null,
+      "comments": []
+    },
+    {
+      "number": 9,
+      "id": "I_kwDORYPFcs7uiSdC",
+      "title": "Context of behaviour",
+      "url": "https://github.com/englishm/moq-relay-dos/issues/9",
+      "state": "OPEN",
+      "author": "LPardue",
+      "authorAssociation": "CONTRIBUTOR",
+      "assignees": [],
+      "labels": [],
+      "body": "The misbehaving subscriber section states\n\n> Subscribers tend to face fewer authentication constraints, which can create a broader attack surface. In broadcast scenarios \u2014 which are a significant near-term deployment model for MoQT \u2014 subscribers may be minimally authenticated or entirely unauthenticated. A malicious subscriber can issue requests that force relays or publishers to commit resources (subscriptions, buffer allocations, backend lookups), manipulate flow control to cause excessive buffering, rapidly create and cancel subscriptions to generate processing overhead, or subscribe to content with no intent to actually consume it.\n\n> The impact a misbehaving subscriber can have depends on where they sit in the topology. If subscribers connect through a relay operated by the content provider (or its CDN), the operator can impose limits and terminate abusive sessions with full context about what legitimate behavior looks like. If subscribers connect to third-party relays, the relay may have less information to distinguish attacks from unusual but legitimate usage.\n\nThis are quite an information rich paragraph. Especially that aspect the a subscriber could do low-level attacks but that the operator might have \"full context\". \n\nI think we can invest some energy in future revision to pull these aspects apart. For example, putting a 3rd party relay in can also reduce the content providers information unless there is some (out-of-band?) mechanism to share things. Alternatively, a 3rd part relay _could_ have more awareness of practical security considerations based on a more-diverse set of experiences that someone setting up their own relay for the first time, or someone that has run a \"monoculture\" and is looking at branching it out.",
+      "createdAt": "2026-02-27T16:59:49Z",
+      "updatedAt": "2026-02-27T16:59:49Z",
+      "closedAt": null,
+      "comments": []
+    },
+    {
+      "number": 10,
+      "id": "I_kwDORYPFcs7uiYPC",
+      "title": "Coordination across nodes is an implementation-defined aspect?",
+      "url": "https://github.com/englishm/moq-relay-dos/issues/10",
+      "state": "OPEN",
+      "author": "LPardue",
+      "authorAssociation": "CONTRIBUTOR",
+      "assignees": [],
+      "labels": [],
+      "body": "In the Authoritative State and Coordination Costs section, we state\n\n> At larger scales, they may require coordination across nodes \u2014 whether through consensus protocols, centralized registries, or other mechanisms.\n\nTo clarify, these are implementation-defined / out-of-band of MoQT itself right?\n\nWe should probably clarify, just to ensure the reader understands the limit of what the MoQ WG can say vs. how much the implementer needs to do their own homework.",
+      "createdAt": "2026-02-27T17:05:34Z",
+      "updatedAt": "2026-02-27T19:46:49Z",
+      "closedAt": null,
+      "comments": [
+        {
+          "author": "englishm-cloudflare",
+          "authorAssociation": "COLLABORATOR",
+          "body": "Yes, exactly. These are problems any large scale deployment needs to solve that are out of scope for MoQT itself.",
+          "createdAt": "2026-02-27T19:46:49Z",
+          "updatedAt": "2026-02-27T19:46:49Z"
+        }
+      ]
+    },
+    {
+      "number": 11,
+      "id": "I_kwDORYPFcs7uikb3",
+      "title": "Further generalizing the considerations for rapid stuff",
+      "url": "https://github.com/englishm/moq-relay-dos/issues/11",
+      "state": "OPEN",
+      "author": "LPardue",
+      "authorAssociation": "CONTRIBUTOR",
+      "assignees": [],
+      "labels": [],
+      "body": "Rapid Request Cycles states: \n\n> The risk is not limited to subscription churn. Any control message that triggers work at the relay can be abused through rapid repetition, including priority updates that may force reordering of internal scheduling structures.\n\n> Implementations that track request rates per session can detect and terminate sessions exhibiting excessive churn without making progress on useful data transfer.\n\nSince the risk is presented as not limited, we should consider generalization the guidance. For example, [HTTP/2 says](https://www.rfc-editor.org/rfc/rfc9113.html#section-10.5)\n\n> An endpoint that doesn't monitor use of these features exposes itself to a risk of denial of service. Implementations SHOULD track the use of these features and set limits on their use. An endpoint MAY treat activity that is suspicious as a [connection error](https://www.rfc-editor.org/rfc/rfc9113.html#ConnectionErrorHandler) ([Section 5.4.1](https://www.rfc-editor.org/rfc/rfc9113.html#ConnectionErrorHandler)) of type [ENHANCE_YOUR_CALM](https://www.rfc-editor.org/rfc/rfc9113.html#ENHANCE_YOUR_CALM).\n\nI'm not suggesting we start using normative language but I want to clarify whether the monitoring of control messages is strictly related to the request rates or not. In HTTP, there tend to be different layers of monitoring (request throttling is sometimes dealt with at the semantic layer) while abuse of priority floods can be independent of requests and doesn't strictly need to be weighted against it (although some implementations might try to implement a \"karma\" or \"weighting\" system). That's a lot of detail I don't think we need to state, just trying to highlight the diversity so our language can have the broadest appeal.",
+      "createdAt": "2026-02-27T17:17:38Z",
+      "updatedAt": "2026-02-27T17:17:38Z",
+      "closedAt": null,
+      "comments": []
+    },
+    {
+      "number": 12,
+      "id": "I_kwDORYPFcs7uisJP",
+      "title": "Update Coalescing",
+      "url": "https://github.com/englishm/moq-relay-dos/issues/12",
+      "state": "OPEN",
+      "author": "LPardue",
+      "authorAssociation": "CONTRIBUTOR",
+      "assignees": [],
+      "labels": [],
+      "body": "I read this section and understood but I'm not understanding what is unique about it as a relay concern. Is it that \"the recipient of REQUEST_UPDATE has inherent protections from MoQT protocol design\", or is the document trying to say a relay should coalesce received REQUEST_UPDATE before sending them onwards, or am I revealing my noobishness in this area?\n\nFor instance is \n\n> Coalescing pending updates where semantically equivalent significantly reduces the effectiveness of update-flood attacks.\n\nsupposed to be intended more literally like \n\n> Relays can coalesce pending updates where received REQUEST_UPDATEs are semantically equivalent, doing so significantly reduces the potential impact of update-flood attacks to [the relay, the upstream, both, something else I missed].",
+      "createdAt": "2026-02-27T17:25:18Z",
+      "updatedAt": "2026-02-27T19:50:22Z",
+      "closedAt": null,
+      "comments": [
+        {
+          "author": "englishm-cloudflare",
+          "authorAssociation": "COLLABORATOR",
+          "body": "Yes, that wording is better. \n\nIn an earlier version I had referred more to attacks and their effectiveness (almost more from the attacker perspective) rather than the impact of such attacks on MoQ deployments. I moved to the \"impact\" framing in most places, but missed this one which reads extra awkwardly as a result.",
+          "createdAt": "2026-02-27T19:50:22Z",
+          "updatedAt": "2026-02-27T19:50:22Z"
+        }
+      ]
+    },
+    {
+      "number": 13,
+      "id": "I_kwDORYPFcs7uiyUn",
+      "title": "Slow Subscribers",
+      "url": "https://github.com/englishm/moq-relay-dos/issues/13",
+      "state": "OPEN",
+      "author": "LPardue",
+      "authorAssociation": "CONTRIBUTOR",
+      "assignees": [],
+      "labels": [],
+      "body": "The section states\n\n> A subscriber that consumes data slower than it is produced causes data to accumulate at the relay. The relay must buffer objects waiting to be read, and that memory pressure could affect other subscribers on the same relay. \n\nIs this strictly only for reliable data streams? My experience with MASQUE is that proxies using datagrams (e.g UDP or IP proxing) tend to drop stuff if a buffer is forming. \n\nAsking mainly to clarify if the guidance we present is applicable to both types, or if we need to mark it a little more clearly.\n\nI also wonder if this section might want to xref over to Flow Control Limitations or Resource Isolation, since its a natural thought that this kind of thing could have adverse effect on others.",
+      "createdAt": "2026-02-27T17:32:11Z",
+      "updatedAt": "2026-02-27T17:34:11Z",
+      "closedAt": null,
+      "comments": []
+    },
+    {
+      "number": 14,
+      "id": "I_kwDORYPFcs7ui6TO",
+      "title": "Confused by Load-Bearing Mitigations section",
+      "url": "https://github.com/englishm/moq-relay-dos/issues/14",
+      "state": "CLOSED",
+      "author": "LPardue",
+      "authorAssociation": "CONTRIBUTOR",
+      "assignees": [],
+      "labels": [],
+      "body": "I'm confused why this is a subsection of Operational Recommendations. I'll propose a PR that clarifies in it my mind and we can discuss",
+      "createdAt": "2026-02-27T17:40:39Z",
+      "updatedAt": "2026-02-27T19:44:18Z",
+      "closedAt": "2026-02-27T19:44:18Z",
+      "comments": []
+    }
+  ],
+  "pulls": [
+    {
+      "number": 1,
+      "id": "PR_kwDORYPFcs7GkjUz",
+      "title": "Initial draft: DoS considerations for MoQ relay deployments",
+      "url": "https://github.com/englishm/moq-relay-dos/pull/1",
+      "state": "MERGED",
+      "author": "englishm-cloudflare",
+      "authorAssociation": "COLLABORATOR",
+      "assignees": [],
+      "labels": [],
+      "body": "## Summary\n\nInitial draft of draft-englishm-moq-relay-dos-00, covering denial-of-service\nconsiderations specific to MoQ relay deployments.\n\nLooking for early feedback before submitting to the Datatracker as an I-D.",
+      "createdAt": "2026-02-26T15:05:06Z",
+      "updatedAt": "2026-02-26T15:08:17Z",
+      "baseRepository": "englishm/moq-relay-dos",
+      "baseRefName": "main",
+      "baseRefOid": "1fe849023bf2a9445aa3014aa41c9f8b770e51c4",
+      "headRepository": "englishm/moq-relay-dos",
+      "headRefName": "draft-00-initial",
+      "headRefOid": "0778335aa1d0922aed8988389f0880cc12c571c6",
+      "closedAt": "2026-02-26T15:08:17Z",
+      "mergedAt": "2026-02-26T15:08:17Z",
+      "mergedBy": "englishm",
+      "mergeCommit": {
+        "oid": "bde9213e2a86a718e6b2205b98287860e77eb81e"
+      },
+      "comments": [],
+      "reviews": [
+        {
+          "id": "PRR_kwDORYPFcs7mK2aS",
+          "commit": {
+            "abbreviatedOid": "0778335"
+          },
+          "author": "englishm",
+          "authorAssociation": "OWNER",
+          "state": "APPROVED",
+          "body": "",
+          "createdAt": "2026-02-26T15:08:04Z",
+          "updatedAt": "2026-02-26T15:08:04Z",
+          "comments": []
+        }
+      ]
+    },
+    {
+      "number": 3,
+      "id": "PR_kwDORYPFcs7GqiG7",
+      "title": "Add entries to the \"Load-Bearing Mitigations\" table",
+      "url": "https://github.com/englishm/moq-relay-dos/pull/3",
+      "state": "MERGED",
+      "author": "sharmafb",
+      "authorAssociation": "CONTRIBUTOR",
+      "assignees": [],
+      "labels": [],
+      "body": "I've added:\r\n* MAX_AUTH_TOKEN_CACHE_SIZE\r\n* Control message length limit",
+      "createdAt": "2026-02-26T21:40:34Z",
+      "updatedAt": "2026-02-26T23:12:21Z",
+      "baseRepository": "englishm/moq-relay-dos",
+      "baseRefName": "main",
+      "baseRefOid": "bde9213e2a86a718e6b2205b98287860e77eb81e",
+      "headRepository": "sharmafb/moq-relay-dos",
+      "headRefName": "patch-2",
+      "headRefOid": "64aaa955d3b1553df59f2a2b910394db4c827fb4",
+      "closedAt": "2026-02-26T23:12:21Z",
+      "mergedAt": "2026-02-26T23:12:21Z",
+      "mergedBy": "englishm",
+      "mergeCommit": {
+        "oid": "e93f125d7685c10f9e4778e1358ddb57cc96b0c8"
+      },
+      "comments": [],
+      "reviews": []
+    },
+    {
+      "number": 5,
+      "id": "PR_kwDORYPFcs7G3h7t",
+      "title": "Simplify and minor tweak to external references",
+      "url": "https://github.com/englishm/moq-relay-dos/pull/5",
+      "state": "MERGED",
+      "author": "LPardue",
+      "authorAssociation": "CONTRIBUTOR",
+      "assignees": [],
+      "labels": [],
+      "body": "The tooling automatically retrieves the metadata (bibtex) to populate\r\nthe references sections (at least for IETF and sometimes other SDOs)\r\n",
+      "createdAt": "2026-02-27T16:31:22Z",
+      "updatedAt": "2026-02-27T17:03:38Z",
+      "baseRepository": "englishm/moq-relay-dos",
+      "baseRefName": "main",
+      "baseRefOid": "e93f125d7685c10f9e4778e1358ddb57cc96b0c8",
+      "headRepository": "LPardue/moq-relay-dos",
+      "headRefName": "simplify-refs",
+      "headRefOid": "a1419128c425252bd1201fad91d6417b888754a1",
+      "closedAt": "2026-02-27T17:03:37Z",
+      "mergedAt": "2026-02-27T17:03:37Z",
+      "mergedBy": "englishm",
+      "mergeCommit": {
+        "oid": "024fb6ada999307bf804a46da521f0b83d98df91"
+      },
+      "comments": [],
+      "reviews": [
+        {
+          "id": "PRR_kwDORYPFcs7miy7U",
+          "commit": {
+            "abbreviatedOid": "a141912"
+          },
+          "author": "LPardue",
+          "authorAssociation": "CONTRIBUTOR",
+          "state": "COMMENTED",
+          "body": "",
+          "createdAt": "2026-02-27T16:32:26Z",
+          "updatedAt": "2026-02-27T16:32:26Z",
+          "comments": [
+            {
+              "originalPosition": 60,
+              "body": "It seemed worthwhile to deep link to the relevant section in the RFC. \n\nDoing deeplinks to MOQT at this stage is fragile in the face of churn, so could come later",
+              "createdAt": "2026-02-27T16:32:26Z",
+              "updatedAt": "2026-02-27T16:32:26Z"
+            }
+          ]
+        },
+        {
+          "id": "PRR_kwDORYPFcs7mjYXm",
+          "commit": {
+            "abbreviatedOid": "a141912"
+          },
+          "author": "englishm",
+          "authorAssociation": "OWNER",
+          "state": "APPROVED",
+          "body": "",
+          "createdAt": "2026-02-27T17:03:23Z",
+          "updatedAt": "2026-02-27T17:03:23Z",
+          "comments": []
+        }
+      ]
+    },
+    {
+      "number": 6,
+      "id": "PR_kwDORYPFcs7G3rLA",
+      "title": "Condense abstract",
+      "url": "https://github.com/englishm/moq-relay-dos/pull/6",
+      "state": "MERGED",
+      "author": "LPardue",
+      "authorAssociation": "CONTRIBUTOR",
+      "assignees": [],
+      "labels": [],
+      "body": "The prose is good but quite long for an abstract, so this change is a proposed condensing.\r\n",
+      "createdAt": "2026-02-27T16:41:46Z",
+      "updatedAt": "2026-02-27T17:04:41Z",
+      "baseRepository": "englishm/moq-relay-dos",
+      "baseRefName": "main",
+      "baseRefOid": "e93f125d7685c10f9e4778e1358ddb57cc96b0c8",
+      "headRepository": "LPardue/moq-relay-dos",
+      "headRefName": "condense-abstract",
+      "headRefOid": "937b8f3b49137e963cad6f4155a37e4c0efba103",
+      "closedAt": "2026-02-27T17:04:41Z",
+      "mergedAt": "2026-02-27T17:04:41Z",
+      "mergedBy": "englishm",
+      "mergeCommit": {
+        "oid": "ca940142d47668ada79451009f05631dbdd4b357"
+      },
+      "comments": [],
+      "reviews": [
+        {
+          "id": "PRR_kwDORYPFcs7mjZ36",
+          "commit": {
+            "abbreviatedOid": "937b8f3"
+          },
+          "author": "englishm",
+          "authorAssociation": "OWNER",
+          "state": "APPROVED",
+          "body": "",
+          "createdAt": "2026-02-27T17:04:33Z",
+          "updatedAt": "2026-02-27T17:04:33Z",
+          "comments": []
+        }
+      ]
+    },
+    {
+      "number": 7,
+      "id": "PR_kwDORYPFcs7G3vuA",
+      "title": "Put the motivation under a note to be removed later",
+      "url": "https://github.com/englishm/moq-relay-dos/pull/7",
+      "state": "MERGED",
+      "author": "LPardue",
+      "authorAssociation": "CONTRIBUTOR",
+      "assignees": [],
+      "labels": [],
+      "body": "Its good to catpure this early I-Ds when soliciting the idea but it\r\ncan become a later distraction with people over indexing on it later.\r\n\r\nAdding a note now makes it a little clearer we know what we are doing\r\n:-)\r\n",
+      "createdAt": "2026-02-27T16:46:43Z",
+      "updatedAt": "2026-02-27T17:11:47Z",
+      "baseRepository": "englishm/moq-relay-dos",
+      "baseRefName": "main",
+      "baseRefOid": "e93f125d7685c10f9e4778e1358ddb57cc96b0c8",
+      "headRepository": "LPardue/moq-relay-dos",
+      "headRefName": "put-some-content-under-notes-to-be-removed",
+      "headRefOid": "32aa26df31cea715e0c7fc78f13ab6771179b004",
+      "closedAt": "2026-02-27T17:11:47Z",
+      "mergedAt": "2026-02-27T17:11:47Z",
+      "mergedBy": "englishm",
+      "mergeCommit": {
+        "oid": "69e681c3291b6d160d4dec2ba691d8ec75739923"
+      },
+      "comments": [],
+      "reviews": [
+        {
+          "id": "PRR_kwDORYPFcs7mjhqn",
+          "commit": {
+            "abbreviatedOid": "32aa26d"
+          },
+          "author": "englishm",
+          "authorAssociation": "OWNER",
+          "state": "APPROVED",
+          "body": "",
+          "createdAt": "2026-02-27T17:11:40Z",
+          "updatedAt": "2026-02-27T17:11:40Z",
+          "comments": []
+        }
+      ]
+    },
+    {
+      "number": 8,
+      "id": "PR_kwDORYPFcs7G3ygh",
+      "title": "Define DoS acronym so we can later rely on it",
+      "url": "https://github.com/englishm/moq-relay-dos/pull/8",
+      "state": "MERGED",
+      "author": "LPardue",
+      "authorAssociation": "CONTRIBUTOR",
+      "assignees": [],
+      "labels": [],
+      "body": "",
+      "createdAt": "2026-02-27T16:50:02Z",
+      "updatedAt": "2026-02-27T17:12:20Z",
+      "baseRepository": "englishm/moq-relay-dos",
+      "baseRefName": "main",
+      "baseRefOid": "e93f125d7685c10f9e4778e1358ddb57cc96b0c8",
+      "headRepository": "LPardue/moq-relay-dos",
+      "headRefName": "define-acronym",
+      "headRefOid": "cc49e7a44197702259103b8a7adbbf8322352e7a",
+      "closedAt": "2026-02-27T17:12:20Z",
+      "mergedAt": "2026-02-27T17:12:20Z",
+      "mergedBy": "englishm",
+      "mergeCommit": {
+        "oid": "feef8aa1080f581638273f8d0120817486ed0e19"
+      },
+      "comments": [],
+      "reviews": [
+        {
+          "id": "PRR_kwDORYPFcs7mjiWZ",
+          "commit": {
+            "abbreviatedOid": "cc49e7a"
+          },
+          "author": "englishm",
+          "authorAssociation": "OWNER",
+          "state": "APPROVED",
+          "body": "",
+          "createdAt": "2026-02-27T17:12:12Z",
+          "updatedAt": "2026-02-27T17:12:12Z",
+          "comments": []
+        }
+      ]
+    },
+    {
+      "number": 15,
+      "id": "PR_kwDORYPFcs7G4sQc",
+      "title": "Move load-bearing mitigations to own section",
+      "url": "https://github.com/englishm/moq-relay-dos/pull/15",
+      "state": "MERGED",
+      "author": "LPardue",
+      "authorAssociation": "CONTRIBUTOR",
+      "assignees": [],
+      "labels": [],
+      "body": "This section was under the operational recommendations section. However,\nit seems more targetted at the protocol designers and their work finalizing\nMoQT. I get the sense we'd want to remove it later, or rewrite it later\nand at that point a different format or breaking out the different aspects\nmight make more sense anyway.\n\nThis change moves the text into its own section and marks it as \"remove when RFC\".\nIt also converts the table into prose, which is a subjective choice to improve\nreadability / maintainability.\n\nFixes #14\n",
+      "createdAt": "2026-02-27T18:00:48Z",
+      "updatedAt": "2026-02-27T19:44:18Z",
+      "baseRepository": "englishm/moq-relay-dos",
+      "baseRefName": "main",
+      "baseRefOid": "feef8aa1080f581638273f8d0120817486ed0e19",
+      "headRepository": "LPardue/moq-relay-dos",
+      "headRefName": "rework-load-bearing",
+      "headRefOid": "7c03a7b9646a7175e5b304b7d904b3de435e552c",
+      "closedAt": "2026-02-27T19:44:18Z",
+      "mergedAt": "2026-02-27T19:44:17Z",
+      "mergedBy": "englishm-cloudflare",
+      "mergeCommit": {
+        "oid": "dc8ac2f4314002bfba91b4f61c15b2f004054a26"
+      },
+      "comments": [
+        {
+          "author": "englishm-cloudflare",
+          "authorAssociation": "COLLABORATOR",
+          "body": "I like tables, personally, but putting this in a separate section is a good idea. I can see the argument for prose being easier to deal with from a purely mechanical text-wrangling perspective, too. I'll think on that.",
+          "createdAt": "2026-02-27T18:48:16Z",
+          "updatedAt": "2026-02-27T18:48:16Z"
+        },
+        {
+          "author": "LPardue",
+          "authorAssociation": "CONTRIBUTOR",
+          "body": "I'm happy to restore the table if we want to land the section change, just let me know ",
+          "createdAt": "2026-02-27T18:50:00Z",
+          "updatedAt": "2026-02-27T18:50:00Z"
+        },
+        {
+          "author": "englishm-cloudflare",
+          "authorAssociation": "COLLABORATOR",
+          "body": "OK, let's keep the table for -00 and then if it turns out to be burdensome we can take your approach. Thanks!",
+          "createdAt": "2026-02-27T18:51:31Z",
+          "updatedAt": "2026-02-27T18:51:31Z"
+        },
+        {
+          "author": "LPardue",
+          "authorAssociation": "CONTRIBUTOR",
+          "body": "Done",
+          "createdAt": "2026-02-27T18:59:55Z",
+          "updatedAt": "2026-02-27T18:59:55Z"
+        }
+      ],
+      "reviews": [
+        {
+          "id": "PRR_kwDORYPFcs7mmFql",
+          "commit": {
+            "abbreviatedOid": "7c03a7b"
+          },
+          "author": "englishm-cloudflare",
+          "authorAssociation": "COLLABORATOR",
+          "state": "APPROVED",
+          "body": "",
+          "createdAt": "2026-02-27T19:44:11Z",
+          "updatedAt": "2026-02-27T19:44:11Z",
+          "comments": []
+        }
+      ]
+    },
+    {
+      "number": 16,
+      "id": "PR_kwDORYPFcs7G4taI",
+      "title": "Make it abundantly clear we are complementing the MoQT security considerations",
+      "url": "https://github.com/englishm/moq-relay-dos/pull/16",
+      "state": "MERGED",
+      "author": "LPardue",
+      "authorAssociation": "CONTRIBUTOR",
+      "assignees": [],
+      "labels": [],
+      "body": "",
+      "createdAt": "2026-02-27T18:02:19Z",
+      "updatedAt": "2026-02-27T18:37:55Z",
+      "baseRepository": "englishm/moq-relay-dos",
+      "baseRefName": "main",
+      "baseRefOid": "feef8aa1080f581638273f8d0120817486ed0e19",
+      "headRepository": "LPardue/moq-relay-dos",
+      "headRefName": "tweak-sec-con",
+      "headRefOid": "24a245541740be12fba371c7a5378196202e643d",
+      "closedAt": "2026-02-27T18:37:55Z",
+      "mergedAt": "2026-02-27T18:37:55Z",
+      "mergedBy": "englishm",
+      "mergeCommit": {
+        "oid": "79acf309f191dc80b46b0d8bf64c48972d688643"
+      },
+      "comments": [],
+      "reviews": [
+        {
+          "id": "PRR_kwDORYPFcs7mk9_z",
+          "commit": {
+            "abbreviatedOid": "24a2455"
+          },
+          "author": "englishm",
+          "authorAssociation": "OWNER",
+          "state": "APPROVED",
+          "body": "",
+          "createdAt": "2026-02-27T18:37:48Z",
+          "updatedAt": "2026-02-27T18:37:48Z",
+          "comments": []
+        }
+      ]
+    },
+    {
+      "number": 17,
+      "id": "PR_kwDORYPFcs7G4ueH",
+      "title": "Add Lucas as co-author",
+      "url": "https://github.com/englishm/moq-relay-dos/pull/17",
+      "state": "MERGED",
+      "author": "LPardue",
+      "authorAssociation": "CONTRIBUTOR",
+      "assignees": [],
+      "labels": [],
+      "body": "",
+      "createdAt": "2026-02-27T18:03:44Z",
+      "updatedAt": "2026-02-27T18:38:46Z",
+      "baseRepository": "englishm/moq-relay-dos",
+      "baseRefName": "main",
+      "baseRefOid": "feef8aa1080f581638273f8d0120817486ed0e19",
+      "headRepository": "LPardue/moq-relay-dos",
+      "headRefName": "add-lucas",
+      "headRefOid": "c1e5b558bde94e087ee46619ba081a4aec7fd738",
+      "closedAt": "2026-02-27T18:38:46Z",
+      "mergedAt": "2026-02-27T18:38:46Z",
+      "mergedBy": "englishm",
+      "mergeCommit": {
+        "oid": "fa4de269bc5b16575f4f564bc86686075af1ea66"
+      },
+      "comments": [],
+      "reviews": [
+        {
+          "id": "PRR_kwDORYPFcs7mk-0I",
+          "commit": {
+            "abbreviatedOid": "c1e5b55"
+          },
+          "author": "englishm",
+          "authorAssociation": "OWNER",
+          "state": "APPROVED",
+          "body": "",
+          "createdAt": "2026-02-27T18:38:40Z",
+          "updatedAt": "2026-02-27T18:38:40Z",
+          "comments": []
+        }
+      ]
+    },
+    {
+      "number": 18,
+      "id": "PR_kwDORYPFcs7G5IfR",
+      "title": "Add Aman Sharma as co-author",
+      "url": "https://github.com/englishm/moq-relay-dos/pull/18",
+      "state": "MERGED",
+      "author": "englishm-cloudflare",
+      "authorAssociation": "COLLABORATOR",
+      "assignees": [],
+      "labels": [],
+      "body": "Adds Aman Sharma (Meta) as a co-author of this draft.\n\nAman has contributed via PR #3 (adding entries to the Load-Bearing Mitigations table) and opened issues #2 and #4 identifying new attack vectors worth documenting.\n\n@sharmafb \u2014 please review and merge when you're comfortable that your contributions justify co-authorship. Author details sourced from the IETF Datatracker. Let me know if anything needs adjusting (email, affiliation, etc.).",
+      "createdAt": "2026-02-27T18:35:36Z",
+      "updatedAt": "2026-02-27T18:54:18Z",
+      "baseRepository": "englishm/moq-relay-dos",
+      "baseRefName": "main",
+      "baseRefOid": "25cfe46772ca7574753479dba35d3564c62424e4",
+      "headRepository": "englishm/moq-relay-dos",
+      "headRefName": "add-author-aman-sharma",
+      "headRefOid": "34373e4675a5c2d49cdcf72e52e35f996b6f3dc3",
+      "closedAt": "2026-02-27T18:54:18Z",
+      "mergedAt": "2026-02-27T18:54:17Z",
+      "mergedBy": "englishm",
+      "mergeCommit": {
+        "oid": "bc6a57ebcc108c302c924832fa684a2486660497"
+      },
+      "comments": [
+        {
+          "author": "sharmafb",
+          "authorAssociation": "CONTRIBUTOR",
+          "body": "Looks good to me, you can go ahead and merge it (I don't have merge permissions)",
+          "createdAt": "2026-02-27T18:42:29Z",
+          "updatedAt": "2026-02-27T18:42:29Z"
+        }
+      ],
+      "reviews": [
+        {
+          "id": "PRR_kwDORYPFcs7mk8R1",
+          "commit": {
+            "abbreviatedOid": "ab3611f"
+          },
+          "author": "sharmafb",
+          "authorAssociation": "CONTRIBUTOR",
+          "state": "APPROVED",
+          "body": "",
+          "createdAt": "2026-02-27T18:36:05Z",
+          "updatedAt": "2026-02-27T18:36:05Z",
+          "comments": []
+        },
+        {
+          "id": "PRR_kwDORYPFcs7mlPgu",
+          "commit": {
+            "abbreviatedOid": "34373e4"
+          },
+          "author": "englishm",
+          "authorAssociation": "OWNER",
+          "state": "APPROVED",
+          "body": "",
+          "createdAt": "2026-02-27T18:54:08Z",
+          "updatedAt": "2026-02-27T18:54:08Z",
+          "comments": []
+        }
+      ]
+    },
+    {
+      "number": 19,
+      "id": "PR_kwDORYPFcs7G5IgV",
+      "title": "Add Ian Swett as co-author",
+      "url": "https://github.com/englishm/moq-relay-dos/pull/19",
+      "state": "MERGED",
+      "author": "englishm-cloudflare",
+      "authorAssociation": "COLLABORATOR",
+      "assignees": [],
+      "labels": [],
+      "body": "Adds Ian Swett (Google) as a co-author of this draft.\n\nIan has indicated interest in co-authoring and contributing to this work on MoQ relay DoS considerations.\n\n@ianswett \u2014 please review and merge when you're comfortable that your contributions justify co-authorship. Author details sourced from the IETF Datatracker. Let me know if anything needs adjusting (email, affiliation, etc.).",
+      "createdAt": "2026-02-27T18:35:37Z",
+      "updatedAt": "2026-03-01T00:12:47Z",
+      "baseRepository": "englishm/moq-relay-dos",
+      "baseRefName": "main",
+      "baseRefOid": "bc6a57ebcc108c302c924832fa684a2486660497",
+      "headRepository": "englishm/moq-relay-dos",
+      "headRefName": "add-author-ian-swett",
+      "headRefOid": "11e056b65b862aecb14e2e3e0d2e9a31624dbe8d",
+      "closedAt": "2026-03-01T00:12:47Z",
+      "mergedAt": "2026-03-01T00:12:46Z",
+      "mergedBy": "englishm",
+      "mergeCommit": {
+        "oid": "7ec8f15d749fd2c2625f4943a332eaecc450eddf"
+      },
+      "comments": [],
+      "reviews": [
+        {
+          "id": "PRR_kwDORYPFcs7mt5ZH",
+          "commit": {
+            "abbreviatedOid": "11e056b"
+          },
+          "author": "ianswett",
+          "authorAssociation": "NONE",
+          "state": "APPROVED",
+          "body": "",
+          "createdAt": "2026-02-28T20:54:02Z",
+          "updatedAt": "2026-02-28T20:54:02Z",
+          "comments": []
+        },
+        {
+          "id": "PRR_kwDORYPFcs7muXld",
+          "commit": {
+            "abbreviatedOid": "11e056b"
+          },
+          "author": "englishm",
+          "authorAssociation": "OWNER",
+          "state": "APPROVED",
+          "body": "",
+          "createdAt": "2026-03-01T00:12:37Z",
+          "updatedAt": "2026-03-01T00:12:37Z",
+          "comments": []
+        }
+      ]
+    },
+    {
+      "number": 20,
+      "id": "PR_kwDORYPFcs7G5Q7m",
+      "title": "Update README.md",
+      "url": "https://github.com/englishm/moq-relay-dos/pull/20",
+      "state": "MERGED",
+      "author": "LPardue",
+      "authorAssociation": "CONTRIBUTOR",
+      "assignees": [],
+      "labels": [],
+      "body": "",
+      "createdAt": "2026-02-27T18:45:40Z",
+      "updatedAt": "2026-02-27T18:49:13Z",
+      "baseRepository": "englishm/moq-relay-dos",
+      "baseRefName": "main",
+      "baseRefOid": "fa4de269bc5b16575f4f564bc86686075af1ea66",
+      "headRepository": "LPardue/moq-relay-dos",
+      "headRefName": "patch-1",
+      "headRefOid": "09cf5bf8c692e354d9fe5fd0184b7656902b242d",
+      "closedAt": "2026-02-27T18:49:13Z",
+      "mergedAt": "2026-02-27T18:49:13Z",
+      "mergedBy": "englishm-cloudflare",
+      "mergeCommit": {
+        "oid": "25cfe46772ca7574753479dba35d3564c62424e4"
+      },
+      "comments": [],
+      "reviews": [
+        {
+          "id": "PRR_kwDORYPFcs7mlJgD",
+          "commit": {
+            "abbreviatedOid": "09cf5bf"
+          },
+          "author": "englishm-cloudflare",
+          "authorAssociation": "COLLABORATOR",
+          "state": "APPROVED",
+          "body": "",
+          "createdAt": "2026-02-27T18:49:02Z",
+          "updatedAt": "2026-02-27T18:49:02Z",
+          "comments": []
+        }
+      ]
+    }
+  ]
 }
