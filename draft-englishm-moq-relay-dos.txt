@@ -5,9 +5,11 @@
 Media Over QUIC                                               M. English
 Internet-Draft                                                 L. Pardue
 Intended status: Informational                                Cloudflare
-Expires: 31 August 2026                                        A. Sharma
+Expires: 2 September 2026                                      A. Sharma
                                                                     Meta
-                                                        27 February 2026
+                                                                I. Swett
+                                                                  Google
+                                                            1 March 2026
 
 
  Denial-of-Service Considerations for Media over QUIC Relay Deployments
@@ -54,7 +56,7 @@ Status of This Memo
    time.  It is inappropriate to use Internet-Drafts as reference
    material or to cite them other than as "work in progress."
 
-   This Internet-Draft will expire on 31 August 2026.
+   This Internet-Draft will expire on 2 September 2026.
 
 Copyright Notice
 
@@ -719,3 +721,8 @@ Authors' Addresses
    Aman Sharma
    Meta
    Email: amsharma@meta.com
+
+
+   Ian Swett
+   Google
+   Email: ianswett@google.com
