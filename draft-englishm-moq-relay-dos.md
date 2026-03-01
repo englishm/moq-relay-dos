@@ -37,6 +37,10 @@ author:
     fullname: "Aman Sharma"
     organization: Meta
     email: "amsharma@meta.com"
+ -
+    fullname: "Ian Swett"
+    organization: Google
+    email: "ianswett@google.com"
 
 normative:
   MOQT: I-D.draft-ietf-moq-transport
