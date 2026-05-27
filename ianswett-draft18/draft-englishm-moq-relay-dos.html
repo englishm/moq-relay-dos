@@ -1682,8 +1682,10 @@ can be abused through rapid repetition. REQUEST_UPDATE
 can change the priority, which may force reordering
 of internal scheduling structures.<a href="#section-4.2-2" class="pilcrow">¶</a></p>
 <p id="section-4.2-3">Implementations that track request rates per session
-can detect and terminate sessions
-exhibiting excessive churn
+can reduce the rate at which they provide more bidirectional
+streams, thereby limiting the number of new requests.
+As a more disruptive measure, implementations can detect
+and terminate sessions exhibiting excessive churn
 without making progress on useful data transfer.<a href="#section-4.2-3" class="pilcrow">¶</a></p>
 <div id="update-coalescing">
 <section id="section-4.2.1">
