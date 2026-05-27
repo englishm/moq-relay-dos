@@ -397,8 +397,10 @@ can change the priority, which may force reordering
 of internal scheduling structures.
 
 Implementations that track request rates per session
-can detect and terminate sessions
-exhibiting excessive churn
+can reduce the rate at which they provide more bidirectional
+streams, thereby limiting the number of new requests.
+As a more disruptive measure, implementations can detect
+and terminate sessions exhibiting excessive churn
 without making progress on useful data transfer.
 
 ### Update Coalescing
