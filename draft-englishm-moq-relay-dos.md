@@ -161,14 +161,15 @@ Relay:
 Control Plane:
 
 : MoQT operations that establish, modify, and tear down state:
-  SUBSCRIBE, FETCH, PUBLISH_NAMESPACE, SUBSCRIBE_NAMESPACE,
+  SUBSCRIBE, PUBLISH, FETCH, PUBLISH_NAMESPACE,
+  SUBSCRIBE_NAMESPACE, SUBSCRIBE_TRACKS, REQUEST_OK,
   REQUEST_UPDATE, TRACK_STATUS, and related messages.
   These often require coordination with backend systems
   for routing, authorization, and state management.
 
 Data Plane:
 
-: MoQT operations involved in delivering media objects
+: MoQT operations involved in delivering MoQ Objects
   to subscribers:
   QUIC stream management, object framing, and flow control.
 
@@ -352,6 +353,15 @@ SUBSCRIBE_NAMESPACE:
   The state cost can be similar to PUBLISH_NAMESPACE
   but evaluated in the reverse direction.
 
+SUBSCRIBE_TRACKS:
+
+: Requests the relay create a subscription (via PUBLISH) for
+  every Track in namespace(s) that begin with a namespace prefix,
+  including new Tracks as they are published. This can quickly
+  create a large number of subscriptions with only a single message
+  from the subscriber as well as causing the Relay to maintain state
+  to identify new Tracks in the namespace.
+
 At the smallest scale,
 these operations are local lookups and writes.
 At larger scales,
@@ -374,7 +384,7 @@ forces repeated setup and teardown work at the relay —
 and potentially at upstream publishers —
 while the attacker pays only the cost
 of sending small control messages.
-This is directly analogous
+This is analogous
 to the HTTP/2 "Rapid Reset" attack {{HTTP2-RAPID-RESET}},
 where attackers exploited the asymmetry
 between the cost of sending RST_STREAM
@@ -382,14 +392,35 @@ and the server-side cost of stream setup.
 
 The risk is not limited to subscription churn.
 Any control message that triggers work at the relay
-can be abused through rapid repetition,
-including priority updates
-that may force reordering of internal scheduling structures.
+can be abused through rapid repetition. REQUEST_UPDATE
+can change the priority, which may force reordering
+of internal scheduling structures.
 
 Implementations that track request rates per session
-can detect and terminate sessions
-exhibiting excessive churn
+can reduce the rate at which they provide more bidirectional
+streams, thereby limiting the number of new requests.
+As a more disruptive measure, implementations can detect
+and terminate sessions exhibiting excessive churn
 without making progress on useful data transfer.
+
+### Update Coalescing
+
+For REQUEST_UPDATE specifically, MoQ permits coalescing
+multiple sequential REQUEST_UPDATE messages
+(see {{MOQT}}, Section 10.9.1) and then
+applying them, instead of applying each individually, to
+avoid churn. For example, if a misbehaving subscriber sent
+100 REQUEST_UPDATEs that changed the priority of a
+Subscription in a single QUIC packet, only one
+REQUEST_UPDATE needs to be applied.
+
+Rapid REQUEST_UPDATE messages
+still consume network and parsing resources,
+but they need not cause proportional backend work.
+
+Coalescing pending updates
+significantly reduces the effectiveness
+of update-flood attacks.
 
 ## Namespace Advertisement Flooding
 
@@ -414,25 +445,10 @@ and namespace subscriptions —
 both per session and per authenticated identity —
 limits the impact a single actor can have on the namespace store.
 
-## Update Coalescing
-
-REQUEST_UPDATE messages have a useful property:
-unlike HTTP/2 priority tree updates
-(where each update forces a tree restructure),
-multiple pending REQUEST_UPDATE messages for the same request
-can be merged into a single state change before being applied.
-Rapid REQUEST_UPDATE messages
-still consume network and parsing resources,
-but they need not cause proportional backend work.
-
-Coalescing pending updates where semantically equivalent
-significantly reduces the effectiveness
-of update-flood attacks.
-
 
 # Data Plane Considerations
 
-Data plane resource exhaustion targets the media forwarding path:
+Data plane resource exhaustion targets the Object forwarding path:
 memory consumed by buffered objects,
 bandwidth spent on delivery,
 and processing capacity for framing and scheduling.
@@ -445,23 +461,23 @@ The relay must buffer objects waiting to be read,
 and that memory pressure could affect other subscribers
 on the same relay.
 This can happen because the subscriber's network is slow,
-because the subscriber's application can't keep up,
-or because the subscriber is deliberately
+because the subscriber's application isn't consuming data
+fast enough, or because the subscriber is deliberately
 not consuming data at all.
 
 Relays that detect and handle slow subscribers
-can limit this accumulation.
-Options include dropping lower-priority data,
-canceling subscriptions that fall too far behind the live edge,
+can limit this accumulation. Options include canceling
+subscriptions that fall too far behind the live edge,
 and imposing per-subscriber buffer limits.
+(see {{MOQT}}, Section 8)
 
 ## Join-Time Buffering
 
 When a subscriber joins a live stream
 and requests historical data —
 to build a decode buffer
-or start from a valid random access point —
-the relay must deliver that historical data
+or start from a past random access point —
+the relay needs to deliver that past data
 while live data continues to arrive.
 If the subscriber's bandwidth is limited,
 the historical delivery takes time
@@ -517,10 +533,10 @@ Across sessions,
 a single session can similarly dominate
 relay-wide memory and bandwidth
 unless the relay imposes application-layer limits.
-Relays that implement fairness policies across sessions —
+Relays can implement fairness policies across sessions —
 such as per-session buffer caps
 or weighted bandwidth allocation —
-can prevent one subscriber's behavior
+to prevent one subscriber's behavior
 from degrading service for others.
 
 # Relay Dual-Role Considerations
@@ -679,8 +695,8 @@ or inadvertently weakened.
 
 | Mechanism | Threat Mitigated | Notes |
 | :--- | :--- | :--- |
-| MAX_REQUEST_ID | Rapid request flooding; unbounded state commitment | Limits outstanding requests a peer can issue. Any proposal to remove or change this needs to provide equivalent protection. |
-| QUIC Stream Limits | Stream exhaustion | Baseline protection. When used as the primary request-limiting mechanism, configuration needs to account for security implications. |
+| QUIC bidi Stream Limits | Rapid request flooding; unbounded state commitment | Limits outstanding requests a peer can issue. Any proposal to remove or change this needs to provide equivalent protection. |
+| QUIC uni Stream Limits | Stream exhaustion | Baseline protection. When used as the primary request-limiting mechanism, configuration needs to account for security implications. |
 | QUIC Flow Control | Receiver memory exhaustion | Protects individual receivers but does not provide cross-session fairness or state exhaustion protection. |
 | Subscription Timeouts | Idle resource consumption | Lets relays reclaim resources from inactive subscriptions. |
 | MAX_AUTH_TOKEN_CACHE_SIZE | Memory consumption | Bounds total per-session bytes of registered authorization token aliases/values |
@@ -691,6 +707,7 @@ or inadvertently weakened.
 
 This entire document addresses security considerations
 for MoQT relay deployments. It complements the MoQT Security Considerations.
+(see {{MOQT}}, Section 13)
 The focus is on denial-of-service threats and resource exhaustion;
 authentication, authorization, and billing are out of scope
 but can be essential parts of a complete defense.
