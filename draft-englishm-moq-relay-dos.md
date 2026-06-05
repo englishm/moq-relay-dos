@@ -459,11 +459,21 @@ A subscriber that consumes data slower than it is produced
 causes data to accumulate at the relay.
 The relay must buffer objects waiting to be read,
 and that memory pressure could affect other subscribers
-on the same relay.
+on the same relay
+(see {{flow-control-limitations}} and {{resource-isolation}}).
 This can happen because the subscriber's network is slow,
 because the subscriber's application isn't consuming data
 fast enough, or because the subscriber is deliberately
 not consuming data at all.
+
+Objects sent on QUIC streams are reliably delivered,
+so a slow subscriber causes unbounded buffering
+unless the relay intervenes.
+Objects sent as datagrams can simply be dropped
+when a buffer forms,
+which naturally limits accumulation
+but does not eliminate the processing cost
+of receiving and discarding them.
 
 Relays that detect and handle slow subscribers
 can limit this accumulation. Options include canceling
@@ -497,7 +507,7 @@ a relay can cancel the subscription,
 skip ahead to the live edge,
 or reduce delivery quality.
 
-## Flow Control Limitations
+## Flow Control Limitations {#flow-control-limitations}
 
 QUIC flow control ({{Section 4 of RFC9000}}) protects receivers
 from memory exhaustion,
@@ -546,7 +556,7 @@ and publishers (to downstream subscribers).
 This dual role creates DoS considerations
 that don't apply to original publishers or end subscribers.
 
-## Resource Isolation
+## Resource Isolation {#resource-isolation}
 
 A relay serving multiple clients
 must prevent one client's behavior
