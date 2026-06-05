@@ -405,22 +405,25 @@ without making progress on useful data transfer.
 
 ### Update Coalescing
 
-For REQUEST_UPDATE specifically, MoQ permits coalescing
-multiple sequential REQUEST_UPDATE messages
-(see {{MOQT}}, Section 10.9.1) and then
-applying them, instead of applying each individually, to
-avoid churn. For example, if a misbehaving subscriber sent
-100 REQUEST_UPDATEs that changed the priority of a
-Subscription in a single QUIC packet, only one
-REQUEST_UPDATE needs to be applied.
+REQUEST_UPDATE messages change properties
+of an existing subscription —
+most commonly the priority,
+which may force reordering of internal scheduling structures.
+The recipient of a REQUEST_UPDATE
+can coalesce multiple pending updates
+for the same subscription
+before applying them
+(see {{MOQT}}, Section 10.9.1).
+For example, if a subscriber sends
+100 REQUEST_UPDATEs changing the priority of a subscription
+within a short window,
+only the final value needs to be applied.
 
 Rapid REQUEST_UPDATE messages
 still consume network and parsing resources,
-but they need not cause proportional backend work.
-
-Coalescing pending updates
-significantly reduces the effectiveness
-of update-flood attacks.
+but coalescing prevents them
+from causing proportional scheduling work
+at the relay.
 
 ## Namespace Advertisement Flooding
 
