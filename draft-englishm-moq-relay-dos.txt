@@ -5,11 +5,11 @@
 Media Over QUIC                                               M. English
 Internet-Draft                                                 L. Pardue
 Intended status: Informational                                Cloudflare
-Expires: 6 December 2026                                       A. Sharma
+Expires: 12 December 2026                                      A. Sharma
                                                                     Meta
                                                                 I. Swett
                                                                   Google
-                                                             4 June 2026
+                                                            10 June 2026
 
 
  Denial-of-Service Considerations for Media over QUIC Relay Deployments
@@ -56,7 +56,7 @@ Status of This Memo
    time.  It is inappropriate to use Internet-Drafts as reference
    material or to cite them other than as "work in progress."
 
-   This Internet-Draft will expire on 6 December 2026.
+   This Internet-Draft will expire on 12 December 2026.
 
 Copyright Notice
 
@@ -342,7 +342,8 @@ Table of Contents
    At the smallest scale, these operations are local lookups and writes.
    At larger scales, they may require coordination across nodes —
    whether through consensus protocols, centralized registries, or other
-   mechanisms.  The specific costs depend on the deployment
+   mechanisms — all of which are implementation-defined and outside the
+   scope of MoQT itself.  The specific costs depend on the deployment
    architecture, but the relative ordering is consistent: control plane
    operations that touch authoritative state can be significantly more
    expensive per message than data plane forwarding.  This cost
