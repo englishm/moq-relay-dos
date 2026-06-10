@@ -367,7 +367,9 @@ these operations are local lookups and writes.
 At larger scales,
 they may require coordination across nodes —
 whether through consensus protocols,
-centralized registries, or other mechanisms.
+centralized registries, or other mechanisms —
+all of which are implementation-defined
+and outside the scope of MoQT itself.
 The specific costs depend on the deployment architecture,
 but the relative ordering is consistent:
 control plane operations that touch authoritative state
