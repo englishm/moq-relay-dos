@@ -5,11 +5,11 @@
 Media Over QUIC                                               M. English
 Internet-Draft                                                 L. Pardue
 Intended status: Informational                                Cloudflare
-Expires: 7 December 2026                                       A. Sharma
+Expires: 12 December 2026                                      A. Sharma
                                                                     Meta
                                                                 I. Swett
                                                                   Google
-                                                             5 June 2026
+                                                            10 June 2026
 
 
  Denial-of-Service Considerations for Media over QUIC Relay Deployments
@@ -56,7 +56,7 @@ Status of This Memo
    time.  It is inappropriate to use Internet-Drafts as reference
    material or to cite them other than as "work in progress."
 
-   This Internet-Draft will expire on 7 December 2026.
+   This Internet-Draft will expire on 12 December 2026.
 
 Copyright Notice
 
@@ -410,24 +410,33 @@ Table of Contents
 
 5.1.  Slow Subscribers
 
-   A subscriber that consumes data slower than it is produced causes
-   data to accumulate at the relay.  The relay must buffer objects
-   waiting to be read, and that memory pressure could affect other
+   Because a relay MUST NOT drop objects on a multi-object stream when
+   forwarding to subscribers (see Section 9.4 of [MOQT]), a subscriber
+   that consumes data more slowly than it is produced will cause data to
+   accumulate at the relay.  That memory pressure could affect other
    subscribers on the same relay (see Section 5.3 and Section 6.1).
    This can happen because the subscriber's network is slow, because the
    subscriber's application isn't consuming data fast enough, or because
    the subscriber is deliberately not consuming data at all.
 
-   Objects sent on QUIC streams are reliably delivered, so a slow
-   subscriber causes unbounded buffering unless the relay intervenes.
-   Objects sent as datagrams can simply be dropped when a buffer forms,
-   which naturally limits accumulation but does not eliminate the
-   processing cost of receiving and discarding them.
+   Objects sent on QUIC streams are reliably delivered, so the relay's
+   only mechanism to bound buffering is to terminate the subscription
+   entirely by resetting the stream.  The relay cannot selectively drop
+   individual objects while keeping the subscription active, which means
+   any resource bound requires full termination — creating a denial-of-
+   service risk where the only defense disrupts service.  Objects sent
+   as datagrams can simply be dropped when a buffer forms, which
+   naturally limits accumulation but does not eliminate the processing
+   cost of receiving and discarding them.
+
+   A relay also cannot apply QUIC flow control backpressure to the
+   upstream publisher on behalf of one slow subscriber without affecting
+   all other subscribers on that track.
 
    Relays that detect and handle slow subscribers can limit this
    accumulation.  Options include canceling subscriptions that fall too
-   far behind the live edge, and imposing per-subscriber buffer limits.
-   (see [MOQT], Section 8)
+   far behind the live edge, and imposing per-subscriber buffer limits
+   (see Section 8 of [MOQT]).
 
 5.2.  Join-Time Buffering
 
