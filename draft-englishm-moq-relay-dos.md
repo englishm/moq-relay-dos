@@ -413,7 +413,7 @@ The recipient of a REQUEST_UPDATE
 can coalesce multiple pending updates
 for the same subscription
 before applying them
-(see {{MOQT}}, Section 10.9.1).
+(see {{Section 10.9 of MOQT}}).
 For example, if a subscriber sends
 100 REQUEST_UPDATEs changing the priority of a subscription
 before the relay has processed them,
