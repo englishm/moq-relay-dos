@@ -410,14 +410,16 @@ Table of Contents
 
 5.1.  Slow Subscribers
 
-   Because a relay MUST NOT drop objects on a multi-object stream when
-   forwarding to subscribers (see Section 9.4 of [MOQT]), a subscriber
-   that consumes data more slowly than it is produced will cause data to
-   accumulate at the relay.  That memory pressure could affect other
-   subscribers on the same relay (see Section 5.3 and Section 6.1).
-   This can happen because the subscriber's network is slow, because the
-   subscriber's application isn't consuming data fast enough, or because
-   the subscriber is deliberately not consuming data at all.
+   A relay MUST NOT reorder or drop objects on a multi-object stream
+   when forwarding to subscribers, absent application-specific
+   information (see Section 9.4 of [MOQT]).  Without such information, a
+   subscriber that consumes data more slowly than it is produced will
+   cause data to accumulate at the relay.  That memory pressure could
+   affect other subscribers on the same relay (see Section 5.3 and
+   Section 6.1).  This can happen because the subscriber's network is
+   slow, because the subscriber's application isn't consuming data fast
+   enough, or because the subscriber is deliberately not consuming data
+   at all.
 
    Objects sent on QUIC streams are reliably delivered, so the relay's
    only mechanism to bound buffering is to terminate the subscription

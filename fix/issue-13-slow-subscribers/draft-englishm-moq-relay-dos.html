@@ -1752,9 +1752,11 @@ and processing capacity for framing and scheduling.<a href="#section-5-1" class=
         <h3 id="name-slow-subscribers">
 <a href="#section-5.1" class="section-number selfRef">5.1. </a><a href="#name-slow-subscribers" class="section-name selfRef">Slow Subscribers</a>
         </h3>
-<p id="section-5.1-1">Because a relay MUST NOT drop objects on a multi-object stream
-when forwarding to subscribers
-(see <span><a href="https://datatracker.ietf.org/doc/html/draft-ietf-moq-transport-18#section-9.4" class="relref">Section 9.4</a> of [<a href="#MOQT" class="cite xref">MOQT</a>]</span>),
+<p id="section-5.1-1">A relay MUST NOT reorder or drop objects
+on a multi-object stream when forwarding to subscribers,
+absent application-specific information
+(see <span><a href="https://datatracker.ietf.org/doc/html/draft-ietf-moq-transport-18#section-9.4" class="relref">Section 9.4</a> of [<a href="#MOQT" class="cite xref">MOQT</a>]</span>).
+Without such information,
 a subscriber that consumes data more slowly than it is produced
 will cause data to accumulate at the relay.
 That memory pressure could affect other subscribers
