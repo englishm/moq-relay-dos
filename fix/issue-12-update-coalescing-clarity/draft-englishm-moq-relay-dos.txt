@@ -5,11 +5,11 @@
 Media Over QUIC                                               M. English
 Internet-Draft                                                 L. Pardue
 Intended status: Informational                                Cloudflare
-Expires: 7 December 2026                                       A. Sharma
+Expires: 12 December 2026                                      A. Sharma
                                                                     Meta
                                                                 I. Swett
                                                                   Google
-                                                             5 June 2026
+                                                            10 June 2026
 
 
  Denial-of-Service Considerations for Media over QUIC Relay Deployments
@@ -56,7 +56,7 @@ Status of This Memo
    time.  It is inappropriate to use Internet-Drafts as reference
    material or to cite them other than as "work in progress."
 
-   This Internet-Draft will expire on 7 December 2026.
+   This Internet-Draft will expire on 12 December 2026.
 
 Copyright Notice
 
@@ -378,8 +378,8 @@ Table of Contents
    coalesce multiple pending updates for the same subscription before
    applying them (see [MOQT], Section 10.9.1).  For example, if a
    subscriber sends 100 REQUEST_UPDATEs changing the priority of a
-   subscription within a short window, only the final value needs to be
-   applied.
+   subscription before the relay has processed them, only the final
+   value needs to be applied.
 
    Rapid REQUEST_UPDATE messages still consume network and parsing
    resources, but coalescing prevents them from causing proportional
