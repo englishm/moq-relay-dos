@@ -376,7 +376,7 @@ Table of Contents
    — most commonly the priority, which may force reordering of internal
    scheduling structures.  The recipient of a REQUEST_UPDATE can
    coalesce multiple pending updates for the same subscription before
-   applying them (see [MOQT], Section 10.9.1).  For example, if a
+   applying them (see Section 10.9 of [MOQT]).  For example, if a
    subscriber sends 100 REQUEST_UPDATEs changing the priority of a
    subscription before the relay has processed them, only the final
    value needs to be applied.
