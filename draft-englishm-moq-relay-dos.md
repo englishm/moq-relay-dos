@@ -457,21 +457,45 @@ and processing capacity for framing and scheduling.
 
 ## Slow Subscribers
 
-A subscriber that consumes data slower than it is produced
-causes data to accumulate at the relay.
-The relay must buffer objects waiting to be read,
-and that memory pressure could affect other subscribers
-on the same relay.
+A relay MUST NOT reorder or drop objects
+on a multi-object stream when forwarding to subscribers,
+absent application-specific information
+(see {{Section 9.4 of MOQT}}).
+Without such information,
+a subscriber that consumes data more slowly than it is produced
+will cause data to accumulate at the relay.
+That memory pressure could affect other subscribers
+on the same relay
+(see {{flow-control-limitations}} and {{resource-isolation}}).
 This can happen because the subscriber's network is slow,
 because the subscriber's application isn't consuming data
 fast enough, or because the subscriber is deliberately
 not consuming data at all.
 
+Objects sent on QUIC streams are reliably delivered,
+so the relay's only mechanism to bound buffering
+is to terminate the subscription entirely
+by resetting the stream.
+The relay cannot selectively drop individual objects
+while keeping the subscription active,
+which means any resource bound requires full termination —
+creating a denial-of-service risk
+where the only defense disrupts service.
+Objects sent as datagrams can simply be dropped
+when a buffer forms,
+which naturally limits accumulation
+but does not eliminate the processing cost
+of receiving and discarding them.
+
+A relay also cannot apply QUIC flow control backpressure
+to the upstream publisher on behalf of one slow subscriber
+without affecting all other subscribers on that track.
+
 Relays that detect and handle slow subscribers
 can limit this accumulation. Options include canceling
 subscriptions that fall too far behind the live edge,
-and imposing per-subscriber buffer limits.
-(see {{MOQT}}, Section 8)
+and imposing per-subscriber buffer limits
+(see {{Section 8 of MOQT}}).
 
 ## Join-Time Buffering
 
@@ -499,7 +523,7 @@ a relay can cancel the subscription,
 skip ahead to the live edge,
 or reduce delivery quality.
 
-## Flow Control Limitations
+## Flow Control Limitations {#flow-control-limitations}
 
 QUIC flow control ({{Section 4 of RFC9000}}) protects receivers
 from memory exhaustion,
@@ -548,7 +572,7 @@ and publishers (to downstream subscribers).
 This dual role creates DoS considerations
 that don't apply to original publishers or end subscribers.
 
-## Resource Isolation
+## Resource Isolation {#resource-isolation}
 
 A relay serving multiple clients
 must prevent one client's behavior
