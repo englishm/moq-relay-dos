@@ -455,9 +455,11 @@ and processing capacity for framing and scheduling.
 
 ## Slow Subscribers
 
-Because a relay MUST NOT drop objects on a multi-object stream
-when forwarding to subscribers
-(see {{Section 9.4 of MOQT}}),
+A relay MUST NOT reorder or drop objects
+on a multi-object stream when forwarding to subscribers,
+absent application-specific information
+(see {{Section 9.4 of MOQT}}).
+Without such information,
 a subscriber that consumes data more slowly than it is produced
 will cause data to accumulate at the relay.
 That memory pressure could affect other subscribers
