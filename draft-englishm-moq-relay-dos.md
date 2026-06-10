@@ -455,10 +455,12 @@ and processing capacity for framing and scheduling.
 
 ## Slow Subscribers
 
-A subscriber that consumes data slower than it is produced
-causes data to accumulate at the relay.
-The relay must buffer objects waiting to be read,
-and that memory pressure could affect other subscribers
+Because a relay MUST NOT drop objects on a multi-object stream
+when forwarding to subscribers
+(see {{Section 9.4 of MOQT}}),
+a subscriber that consumes data more slowly than it is produced
+will cause data to accumulate at the relay.
+That memory pressure could affect other subscribers
 on the same relay
 (see {{flow-control-limitations}} and {{resource-isolation}}).
 This can happen because the subscriber's network is slow,
@@ -467,19 +469,29 @@ fast enough, or because the subscriber is deliberately
 not consuming data at all.
 
 Objects sent on QUIC streams are reliably delivered,
-so a slow subscriber causes unbounded buffering
-unless the relay intervenes.
+so the relay's only mechanism to bound buffering
+is to terminate the subscription entirely
+by resetting the stream.
+The relay cannot selectively drop individual objects
+while keeping the subscription active,
+which means any resource bound requires full termination —
+creating a denial-of-service risk
+where the only defense disrupts service.
 Objects sent as datagrams can simply be dropped
 when a buffer forms,
 which naturally limits accumulation
 but does not eliminate the processing cost
 of receiving and discarding them.
 
+A relay also cannot apply QUIC flow control backpressure
+to the upstream publisher on behalf of one slow subscriber
+without affecting all other subscribers on that track.
+
 Relays that detect and handle slow subscribers
 can limit this accumulation. Options include canceling
 subscriptions that fall too far behind the live edge,
-and imposing per-subscriber buffer limits.
-(see {{MOQT}}, Section 8)
+and imposing per-subscriber buffer limits
+(see {{Section 8 of MOQT}}).
 
 ## Join-Time Buffering
 
