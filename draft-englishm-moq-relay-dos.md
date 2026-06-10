@@ -416,7 +416,7 @@ before applying them
 (see {{MOQT}}, Section 10.9.1).
 For example, if a subscriber sends
 100 REQUEST_UPDATEs changing the priority of a subscription
-within a short window,
+before the relay has processed them,
 only the final value needs to be applied.
 
 Rapid REQUEST_UPDATE messages
