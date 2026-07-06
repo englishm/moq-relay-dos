@@ -411,18 +411,35 @@ Table of Contents
 
 5.1.  Slow Subscribers
 
-   A subscriber that consumes data slower than it is produced causes
-   data to accumulate at the relay.  The relay must buffer objects
-   waiting to be read, and that memory pressure could affect other
-   subscribers on the same relay.  This can happen because the
-   subscriber's network is slow, because the subscriber's application
-   isn't consuming data fast enough, or because the subscriber is
-   deliberately not consuming data at all.
+   A relay MUST NOT reorder or drop objects on a multi-object stream
+   when forwarding to subscribers, absent application-specific
+   information (see Section 9.4 of [MOQT]).  Without such information, a
+   subscriber that consumes data more slowly than it is produced will
+   cause data to accumulate at the relay.  That memory pressure could
+   affect other subscribers on the same relay (see Section 5.3 and
+   Section 6.1).  This can happen because the subscriber's network is
+   slow, because the subscriber's application isn't consuming data fast
+   enough, or because the subscriber is deliberately not consuming data
+   at all.
+
+   Objects sent on QUIC streams are reliably delivered, so the relay's
+   only mechanism to bound buffering is to terminate the subscription
+   entirely by resetting the stream.  The relay cannot selectively drop
+   individual objects while keeping the subscription active, which means
+   any resource bound requires full termination — creating a denial-of-
+   service risk where the only defense disrupts service.  Objects sent
+   as datagrams can simply be dropped when a buffer forms, which
+   naturally limits accumulation but does not eliminate the processing
+   cost of receiving and discarding them.
+
+   A relay also cannot apply QUIC flow control backpressure to the
+   upstream publisher on behalf of one slow subscriber without affecting
+   other downstream subscribers of that track.
 
    Relays that detect and handle slow subscribers can limit this
    accumulation.  Options include canceling subscriptions that fall too
-   far behind the live edge, and imposing per-subscriber buffer limits.
-   (see [MOQT], Section 8)
+   far behind the live edge, and imposing per-subscriber buffer limits
+   (see Section 8 of [MOQT]).
 
 5.2.  Join-Time Buffering
 
@@ -661,9 +678,9 @@ Table of Contents
 
    [MOQT]     Nandakumar, S., Vasiliev, V., Swett, I., and A. Frindell,
               "Media over QUIC Transport", Work in Progress, Internet-
-              Draft, draft-ietf-moq-transport-18, 12 May 2026,
+              Draft, draft-ietf-moq-transport-19, 6 July 2026,
               <https://datatracker.ietf.org/doc/html/draft-ietf-moq-
-              transport-18>.
+              transport-19>.
 
    [QUIC]     Iyengar, J., Ed. and M. Thomson, Ed., "QUIC: A UDP-Based
               Multiplexed and Secure Transport", RFC 9000,

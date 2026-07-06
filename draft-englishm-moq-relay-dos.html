@@ -1703,7 +1703,7 @@ The recipient of a REQUEST_UPDATE
 can coalesce multiple pending updates
 for the same subscription
 before applying them
-(see <span><a href="https://datatracker.ietf.org/doc/html/draft-ietf-moq-transport-18#section-10.9" class="relref">Section 10.9</a> of [<a href="#MOQT" class="cite xref">MOQT</a>]</span>).
+(see <span><a href="https://datatracker.ietf.org/doc/html/draft-ietf-moq-transport-19#section-10.9" class="relref">Section 10.9</a> of [<a href="#MOQT" class="cite xref">MOQT</a>]</span>).
 For example, if a subscriber sends
 100 REQUEST_UPDATEs changing the priority of a subscription
 before the relay has processed them,
@@ -1759,20 +1759,42 @@ and processing capacity for framing and scheduling.<a href="#section-5-1" class=
         <h3 id="name-slow-subscribers">
 <a href="#section-5.1" class="section-number selfRef">5.1. </a><a href="#name-slow-subscribers" class="section-name selfRef">Slow Subscribers</a>
         </h3>
-<p id="section-5.1-1">A subscriber that consumes data slower than it is produced
-causes data to accumulate at the relay.
-The relay must buffer objects waiting to be read,
-and that memory pressure could affect other subscribers
-on the same relay.
+<p id="section-5.1-1">A relay MUST NOT reorder or drop objects
+on a multi-object stream when forwarding to subscribers,
+absent application-specific information
+(see <span><a href="https://datatracker.ietf.org/doc/html/draft-ietf-moq-transport-19#section-9.4" class="relref">Section 9.4</a> of [<a href="#MOQT" class="cite xref">MOQT</a>]</span>).
+Without such information,
+a subscriber that consumes data more slowly than it is produced
+will cause data to accumulate at the relay.
+That memory pressure could affect other subscribers
+on the same relay
+(see <a href="#flow-control-limitations" class="auto internal xref">Section 5.3</a> and <a href="#resource-isolation" class="auto internal xref">Section 6.1</a>).
 This can happen because the subscriber's network is slow,
 because the subscriber's application isn't consuming data
 fast enough, or because the subscriber is deliberately
 not consuming data at all.<a href="#section-5.1-1" class="pilcrow">¶</a></p>
-<p id="section-5.1-2">Relays that detect and handle slow subscribers
+<p id="section-5.1-2">Objects sent on QUIC streams are reliably delivered,
+so the relay's only mechanism to bound buffering
+is to terminate the subscription entirely
+by resetting the stream.
+The relay cannot selectively drop individual objects
+while keeping the subscription active,
+which means any resource bound requires full termination —
+creating a denial-of-service risk
+where the only defense disrupts service.
+Objects sent as datagrams can simply be dropped
+when a buffer forms,
+which naturally limits accumulation
+but does not eliminate the processing cost
+of receiving and discarding them.<a href="#section-5.1-2" class="pilcrow">¶</a></p>
+<p id="section-5.1-3">A relay also cannot apply QUIC flow control backpressure
+to the upstream publisher on behalf of one slow subscriber
+without affecting other downstream subscribers of that track.<a href="#section-5.1-3" class="pilcrow">¶</a></p>
+<p id="section-5.1-4">Relays that detect and handle slow subscribers
 can limit this accumulation. Options include canceling
 subscriptions that fall too far behind the live edge,
-and imposing per-subscriber buffer limits.
-(see <span>[<a href="#MOQT" class="cite xref">MOQT</a>]</span>, Section 8)<a href="#section-5.1-2" class="pilcrow">¶</a></p>
+and imposing per-subscriber buffer limits
+(see <span><a href="https://datatracker.ietf.org/doc/html/draft-ietf-moq-transport-19#section-8" class="relref">Section 8</a> of [<a href="#MOQT" class="cite xref">MOQT</a>]</span>).<a href="#section-5.1-4" class="pilcrow">¶</a></p>
 </section>
 </div>
 <div id="join-time-buffering">
@@ -2115,7 +2137,7 @@ beyond what the transport protocol alone can provide.<a href="#section-9-1" clas
 <dl class="references">
 <dt id="MOQT">[MOQT]</dt>
         <dd>
-<span class="refAuthor">Nandakumar, S.</span>, <span class="refAuthor">Vasiliev, V.</span>, <span class="refAuthor">Swett, I.</span>, and <span class="refAuthor">A. Frindell</span>, <span class="refTitle">"Media over QUIC Transport"</span>, <span class="refContent">Work in Progress</span>, <span class="seriesInfo">Internet-Draft, draft-ietf-moq-transport-18</span>, <time datetime="2026-05-12" class="refDate">12 May 2026</time>, <span>&lt;<a href="https://datatracker.ietf.org/doc/html/draft-ietf-moq-transport-18">https://datatracker.ietf.org/doc/html/draft-ietf-moq-transport-18</a>&gt;</span>. </dd>
+<span class="refAuthor">Nandakumar, S.</span>, <span class="refAuthor">Vasiliev, V.</span>, <span class="refAuthor">Swett, I.</span>, and <span class="refAuthor">A. Frindell</span>, <span class="refTitle">"Media over QUIC Transport"</span>, <span class="refContent">Work in Progress</span>, <span class="seriesInfo">Internet-Draft, draft-ietf-moq-transport-19</span>, <time datetime="2026-07-06" class="refDate">6 July 2026</time>, <span>&lt;<a href="https://datatracker.ietf.org/doc/html/draft-ietf-moq-transport-19">https://datatracker.ietf.org/doc/html/draft-ietf-moq-transport-19</a>&gt;</span>. </dd>
 <dd class="break"></dd>
 <dt id="RFC9000">[QUIC]</dt>
       <dd>
