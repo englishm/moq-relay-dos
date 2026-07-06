@@ -5,11 +5,11 @@
 Media Over QUIC                                               M. English
 Internet-Draft                                                 L. Pardue
 Intended status: Informational                                Cloudflare
-Expires: 12 December 2026                                      A. Sharma
+Expires: 7 January 2027                                        A. Sharma
                                                                     Meta
                                                                 I. Swett
                                                                   Google
-                                                            10 June 2026
+                                                             6 July 2026
 
 
  Denial-of-Service Considerations for Media over QUIC Relay Deployments
@@ -56,7 +56,7 @@ Status of This Memo
    time.  It is inappropriate to use Internet-Drafts as reference
    material or to cite them other than as "work in progress."
 
-   This Internet-Draft will expire on 12 December 2026.
+   This Internet-Draft will expire on 7 January 2027.
 
 Copyright Notice
 
@@ -433,7 +433,7 @@ Table of Contents
 
    A relay also cannot apply QUIC flow control backpressure to the
    upstream publisher on behalf of one slow subscriber without affecting
-   all other subscribers on that track.
+   other downstream subscribers of that track.
 
    Relays that detect and handle slow subscribers can limit this
    accumulation.  Options include canceling subscriptions that fall too
@@ -677,9 +677,9 @@ Table of Contents
 
    [MOQT]     Nandakumar, S., Vasiliev, V., Swett, I., and A. Frindell,
               "Media over QUIC Transport", Work in Progress, Internet-
-              Draft, draft-ietf-moq-transport-18, 12 May 2026,
+              Draft, draft-ietf-moq-transport-19, 6 July 2026,
               <https://datatracker.ietf.org/doc/html/draft-ietf-moq-
-              transport-18>.
+              transport-19>.
 
    [QUIC]     Iyengar, J., Ed. and M. Thomson, Ed., "QUIC: A UDP-Based
               Multiplexed and Secure Transport", RFC 9000,

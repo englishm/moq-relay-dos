@@ -19,25 +19,26 @@ on behalf of publishers and subscribers.
 This document complements the MoQT Security Considerations,
 focusing on the unique considerations for relays. 
     " name="description">
-<meta content="xml2rfc 3.33.0" name="generator">
+<meta content="xml2rfc 3.34.0" name="generator">
 <meta content="moq" name="keyword">
 <meta content="denial-of-service" name="keyword">
 <meta content="relay" name="keyword">
 <meta content="resource exhaustion" name="keyword">
 <meta content="draft-englishm-moq-relay-dos-latest" name="ietf.draft">
 <!-- Generator version information:
-  xml2rfc 3.33.0
-    Python 3.12.13
-    ConfigArgParse 1.7
+  xml2rfc 3.34.0
+    Python 3.14.5
+    ConfigArgParse 1.7.5
     google-i18n-address 3.1.1
     intervaltree 3.2.1
     Jinja2 3.1.6
-    lxml 6.0.2
-    platformdirs 4.9.6
+    lxml 6.1.1
+    natsort 8.4.0
+    platformdirs 4.10.0
     pycountry 24.6.1
     PyYAML 6.0.3
     requests 2.33.1
-    wcwidth 0.7.0
+    wcwidth 0.8.2
 -->
 <link href="draft-englishm-moq-relay-dos.xml" rel="alternate" type="application/rfc+xml">
 <link href="#copyright" rel="license">
@@ -1056,11 +1057,11 @@ svg {
 <thead><tr>
 <td class="left">Internet-Draft</td>
 <td class="center">MoQ Relay DoS</td>
-<td class="right">June 2026</td>
+<td class="right">July 2026</td>
 </tr></thead>
 <tfoot><tr>
 <td class="left">English, et al.</td>
-<td class="center">Expires 12 December 2026</td>
+<td class="center">Expires 7 January 2027</td>
 <td class="right">[Page]</td>
 </tr></tfoot>
 </table>
@@ -1073,12 +1074,12 @@ svg {
 <dd class="internet-draft">draft-englishm-moq-relay-dos-latest</dd>
 <dt class="label-published">Published:</dt>
 <dd class="published">
-<time datetime="2026-06-10" class="published">10 June 2026</time>
+<time datetime="2026-07-06" class="published">6 July 2026</time>
     </dd>
 <dt class="label-intended-status">Intended Status:</dt>
 <dd class="intended-status">Informational</dd>
 <dt class="label-expires">Expires:</dt>
-<dd class="expires"><time datetime="2026-12-12">12 December 2026</time></dd>
+<dd class="expires"><time datetime="2027-01-07">7 January 2027</time></dd>
 <dt class="label-authors">Authors:</dt>
 <dd class="authors">
 <div class="author">
@@ -1147,7 +1148,7 @@ focusing on the unique considerations for relays.<a href="#section-abstract-1" c
         time. It is inappropriate to use Internet-Drafts as reference
         material or to cite them other than as "work in progress."<a href="#section-boilerplate.1-3" class="pilcrow">¶</a></p>
 <p id="section-boilerplate.1-4">
-        This Internet-Draft will expire on 12 December 2026.<a href="#section-boilerplate.1-4" class="pilcrow">¶</a></p>
+        This Internet-Draft will expire on 7 January 2027.<a href="#section-boilerplate.1-4" class="pilcrow">¶</a></p>
 </section>
 </div>
 <div id="copyright">
@@ -1755,7 +1756,7 @@ and processing capacity for framing and scheduling.<a href="#section-5-1" class=
 <p id="section-5.1-1">A relay MUST NOT reorder or drop objects
 on a multi-object stream when forwarding to subscribers,
 absent application-specific information
-(see <span><a href="https://datatracker.ietf.org/doc/html/draft-ietf-moq-transport-18#section-9.4" class="relref">Section 9.4</a> of [<a href="#MOQT" class="cite xref">MOQT</a>]</span>).
+(see <span><a href="https://datatracker.ietf.org/doc/html/draft-ietf-moq-transport-19#section-9.4" class="relref">Section 9.4</a> of [<a href="#MOQT" class="cite xref">MOQT</a>]</span>).
 Without such information,
 a subscriber that consumes data more slowly than it is produced
 will cause data to accumulate at the relay.
@@ -1782,12 +1783,12 @@ but does not eliminate the processing cost
 of receiving and discarding them.<a href="#section-5.1-2" class="pilcrow">¶</a></p>
 <p id="section-5.1-3">A relay also cannot apply QUIC flow control backpressure
 to the upstream publisher on behalf of one slow subscriber
-without affecting all other subscribers on that track.<a href="#section-5.1-3" class="pilcrow">¶</a></p>
+without affecting other downstream subscribers of that track.<a href="#section-5.1-3" class="pilcrow">¶</a></p>
 <p id="section-5.1-4">Relays that detect and handle slow subscribers
 can limit this accumulation. Options include canceling
 subscriptions that fall too far behind the live edge,
 and imposing per-subscriber buffer limits
-(see <span><a href="https://datatracker.ietf.org/doc/html/draft-ietf-moq-transport-18#section-8" class="relref">Section 8</a> of [<a href="#MOQT" class="cite xref">MOQT</a>]</span>).<a href="#section-5.1-4" class="pilcrow">¶</a></p>
+(see <span><a href="https://datatracker.ietf.org/doc/html/draft-ietf-moq-transport-19#section-8" class="relref">Section 8</a> of [<a href="#MOQT" class="cite xref">MOQT</a>]</span>).<a href="#section-5.1-4" class="pilcrow">¶</a></p>
 </section>
 </div>
 <div id="join-time-buffering">
@@ -2130,7 +2131,7 @@ beyond what the transport protocol alone can provide.<a href="#section-9-1" clas
 <dl class="references">
 <dt id="MOQT">[MOQT]</dt>
         <dd>
-<span class="refAuthor">Nandakumar, S.</span>, <span class="refAuthor">Vasiliev, V.</span>, <span class="refAuthor">Swett, I.</span>, and <span class="refAuthor">A. Frindell</span>, <span class="refTitle">"Media over QUIC Transport"</span>, <span class="refContent">Work in Progress</span>, <span class="seriesInfo">Internet-Draft, draft-ietf-moq-transport-18</span>, <time datetime="2026-05-12" class="refDate">12 May 2026</time>, <span>&lt;<a href="https://datatracker.ietf.org/doc/html/draft-ietf-moq-transport-18">https://datatracker.ietf.org/doc/html/draft-ietf-moq-transport-18</a>&gt;</span>. </dd>
+<span class="refAuthor">Nandakumar, S.</span>, <span class="refAuthor">Vasiliev, V.</span>, <span class="refAuthor">Swett, I.</span>, and <span class="refAuthor">A. Frindell</span>, <span class="refTitle">"Media over QUIC Transport"</span>, <span class="refContent">Work in Progress</span>, <span class="seriesInfo">Internet-Draft, draft-ietf-moq-transport-19</span>, <time datetime="2026-07-06" class="refDate">6 July 2026</time>, <span>&lt;<a href="https://datatracker.ietf.org/doc/html/draft-ietf-moq-transport-19">https://datatracker.ietf.org/doc/html/draft-ietf-moq-transport-19</a>&gt;</span>. </dd>
 <dd class="break"></dd>
 <dt id="RFC9000">[QUIC]</dt>
       <dd>
