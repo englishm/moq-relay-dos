@@ -487,7 +487,7 @@ of receiving and discarding them.
 
 A relay also cannot apply QUIC flow control backpressure
 to the upstream publisher on behalf of one slow subscriber
-without affecting all other subscribers on that track.
+without affecting other downstream subscribers of that track.
 
 Relays that detect and handle slow subscribers
 can limit this accumulation. Options include canceling
