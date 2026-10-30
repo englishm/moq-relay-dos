@@ -302,7 +302,7 @@ or some partitioning scheme —
 and the per-operation cost tends to increase accordingly.
 MoQT is designed to support distribution at scale
 through third-party relay networks
-(see {{MOQT}}, Section 1.1.4),
+(see {{Section 1.2.4 of MOQT}}),
 so this document focuses on the cost profile
 where these pressures are most acute.
 
@@ -415,7 +415,7 @@ The recipient of a REQUEST_UPDATE
 can coalesce multiple pending updates
 for the same subscription
 before applying them
-(see {{Section 10.9 of MOQT}}).
+(see {{Section 9.5.1 of MOQT}}).
 For example, if a subscriber sends
 100 REQUEST_UPDATEs changing the priority of a subscription
 before the relay has processed them,
@@ -463,7 +463,7 @@ and processing capacity for framing and scheduling.
 A relay MUST NOT reorder or drop objects
 on a multi-object stream when forwarding to subscribers,
 absent application-specific information
-(see {{Section 9.4 of MOQT}}).
+(see {{Section 7.4 of MOQT}}).
 Without such information,
 a subscriber that consumes data more slowly than it is produced
 will cause data to accumulate at the relay.
@@ -498,7 +498,7 @@ Relays that detect and handle slow subscribers
 can limit this accumulation. Options include canceling
 subscriptions that fall too far behind the live edge,
 and imposing per-subscriber buffer limits
-(see {{Section 8 of MOQT}}).
+(see {{Section 5.2 of MOQT}}).
 
 ## Join-Time Buffering
 
@@ -736,7 +736,7 @@ or inadvertently weakened.
 
 This entire document addresses security considerations
 for MoQT relay deployments. It complements the MoQT Security Considerations.
-(see {{MOQT}}, Section 13)
+(see {{Section 15 of MOQT}})
 The focus is on denial-of-service threats and resource exhaustion;
 authentication, authorization, and billing are out of scope
 but can be essential parts of a complete defense.
