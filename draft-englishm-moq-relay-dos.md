@@ -255,6 +255,22 @@ as both a misbehaving subscriber (to its upstream peers)
 and a misbehaving publisher (to its downstream peers)
 at the same time.
 
+A misbehaving relay can also direct load at a third party.
+When a server sends GOAWAY with a New Session URI,
+the client MUST use that URI for its new session
+(see {{Section 9.2 of MOQT}}).
+A relay with many connected clients
+can send them all a GOAWAY naming a victim host,
+which then receives a burst of connection attempts
+from clients that would not otherwise contact it.
+The victim need not implement MoQT at all.
+Because the clients are following the protocol,
+the victim cannot prevent the connection attempts.
+Mitigating this would require clients
+to have some assurance that a new URI is authoritative
+before following it,
+which is a matter for the transport specification.
+
 ## Amplification Properties
 
 MoQT has significant amplification properties.
