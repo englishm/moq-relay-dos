@@ -526,6 +526,52 @@ a relay can cancel the subscription,
 skip ahead to the live edge,
 or reduce delivery quality.
 
+## Unknown Track Aliases {#unknown-track-aliases}
+
+Objects can arrive on a data stream or in a datagram
+before the control message that associates their Track Alias
+with a subscription.
+{{Section 3.1.3.1 of MOQT}} allows the receiver
+to drop such data or to buffer it briefly,
+and to withhold stream flow control beyond the stream header
+until the Track Alias is established.
+It does not say how much to buffer or for how long,
+and the sender chooses the Track Alias values,
+so a receiver cannot tell in advance
+which aliases will turn out to be valid.
+A peer, whether misbehaving or merely slow to send its control messages,
+can therefore make a relay hold data it cannot yet attribute
+to any subscription or account against any limit
+tied to a subscription.
+
+A relay that buffers data for unknown Track Aliases
+can bound it in two dimensions:
+how long it waits for the alias to be established,
+and how much data it holds while waiting,
+both per session and across the relay.
+Withholding stream flow control
+bounds the amount of data the peer can send on those streams,
+though it does not bound the number of streams opened,
+which remains limited by QUIC stream limits.
+
+Context can inform these limits.
+Data that could plausibly belong to a request
+the relay itself has sent and not yet seen answered,
+such as a pending SUBSCRIBE,
+is more likely to be legitimate than unsolicited data
+on a session where the relay does not expect to receive PUBLISH.
+A relay can reasonably wait longer or hold more
+in the first case than in the second.
+
+When a relay discards buffered data under resource pressure,
+discarding everything for the affected Track Alias,
+rather than individual Subgroups,
+avoids leaving gaps that are hard to account for
+if the alias later turns out to be valid.
+The sender is not told why its streams were reset,
+so it cannot distinguish this from other stream resets.
+Datagrams with an unknown Track Alias can simply be dropped.
+
 ## Flow Control Limitations {#flow-control-limitations}
 
 QUIC flow control ({{Section 4 of RFC9000}}) protects receivers
