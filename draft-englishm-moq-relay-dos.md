@@ -526,6 +526,34 @@ a relay can cancel the subscription,
 skip ahead to the live edge,
 or reduce delivery quality.
 
+## Per-Object Costs {#per-object-costs}
+
+Many relay costs scale with the number of Objects, Subgroups,
+or properties rather than with the number of bytes.
+Each Object carries per-Object metadata
+and is tracked, cached, scheduled, and forwarded individually,
+and each Subgroup delivered on its own stream
+costs stream setup and per-stream state at every hop.
+A publisher that sends many very small or empty Objects,
+Objects whose properties are large relative to their payload,
+or many short-lived Subgroups
+can make a relay do far more work per byte received
+than a publisher that sends the same data in larger units.
+That work is multiplied for each downstream subscriber.
+
+Limits expressed only in bytes,
+including QUIC flow control,
+do not see this cost.
+A track that stays within a byte budget
+can still exhaust CPU through per-Object processing
+and many small writes to the transport,
+or exhaust memory through per-Object bookkeeping.
+Relays can bound the rate and number of Objects and Subgroups
+as well as bytes,
+and can account for a per-entry overhead
+when charging cached Objects against a cache budget,
+so that empty or tiny Objects are not free.
+
 ## Flow Control Limitations {#flow-control-limitations}
 
 QUIC flow control ({{Section 4 of RFC9000}}) protects receivers
