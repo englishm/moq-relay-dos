@@ -5,11 +5,11 @@
 Media Over QUIC                                               M. English
 Internet-Draft                                                 L. Pardue
 Intended status: Informational                                Cloudflare
-Expires: 3 May 2027                                            A. Sharma
+Expires: 6 May 2027                                            A. Sharma
                                                                     Meta
                                                                 I. Swett
                                                                   Google
-                                                         30 October 2026
+                                                         2 November 2026
 
 
  Denial-of-Service Considerations for Media over QUIC Relay Deployments
@@ -56,7 +56,7 @@ Status of This Memo
    time.  It is inappropriate to use Internet-Drafts as reference
    material or to cite them other than as "work in progress."
 
-   This Internet-Draft will expire on 3 May 2027.
+   This Internet-Draft will expire on 6 May 2027.
 
 Copyright Notice
 
@@ -257,6 +257,18 @@ Table of Contents
    effectively acts as both a misbehaving subscriber (to its upstream
    peers) and a misbehaving publisher (to its downstream peers) at the
    same time.
+
+   A misbehaving relay can also direct load at a third party.  When a
+   server sends GOAWAY with a New Session URI, the client MUST use that
+   URI for its new session (see Section 9.2 of [MOQT]).  A relay with
+   many connected clients can send them all a GOAWAY naming a victim
+   host, which then receives a burst of connection attempts from clients
+   that would not otherwise contact it.  The victim need not implement
+   MoQT at all.  Because the clients are following the protocol, the
+   victim cannot prevent the connection attempts.  Mitigating this would
+   require clients to have some assurance that a new URI is
+   authoritative before following it, which is a matter for the
+   transport specification.
 
 3.2.  Amplification Properties
 
@@ -678,9 +690,9 @@ Table of Contents
 
    [MOQT]     Nandakumar, S., Vasiliev, V., Swett, I., and A. Frindell,
               "Media over QUIC Transport", Work in Progress, Internet-
-              Draft, draft-ietf-moq-transport-22, 1 October 2026,
+              Draft, draft-ietf-moq-transport-23, 2 November 2026,
               <https://datatracker.ietf.org/doc/html/draft-ietf-moq-
-              transport-22>.
+              transport-23>.
 
    [QUIC]     Iyengar, J., Ed. and M. Thomson, Ed., "QUIC: A UDP-Based
               Multiplexed and Secure Transport", RFC 9000,
