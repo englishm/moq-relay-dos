@@ -629,6 +629,40 @@ aggregating or deduplicating upstream requests where possible,
 and shedding downstream load
 rather than passing it through to upstream peers.
 
+## Paused Subscriptions {#paused-subscriptions}
+
+A subscription can be paused,
+in which case the publisher sends no Objects on it
+until it is resumed
+(see {{Section 3.1.1 of MOQT}}).
+A paused subscription costs the subscriber little
+but still occupies state at the relay,
+and when it is the only downstream subscription for a Track
+it can still cause upstream work.
+When all downstream subscriptions to a Track are paused,
+the relay decides whether to pause its upstream subscription
+(see {{Section 7.2 of MOQT}}).
+Leaving it unpaused keeps the relay's cache warm
+so that a resumed subscriber is served quickly,
+but it pulls content from the publisher
+that no subscriber is currently receiving.
+A subscriber that opens many paused subscriptions
+could use this to drive upstream traffic and cache use
+at almost no cost to itself.
+
+Counting paused subscriptions against the same per-session
+and per-identity limits as active ones prevents them
+from being a cheap way to accumulate relay state.
+Keeping upstream subscriptions unpaused
+is most appropriate when there is reason to expect
+that a downstream subscriber will resume soon,
+for example for popular content,
+and less so for Tracks requested only by paused subscriptions
+from a single session.
+Rapid toggling between paused and unpaused
+is another form of the rapid request cycles
+described in {{rapid-request-cycles}}.
+
 ## Multi-Publisher Fan-Out
 
 When a relay serves content from multiple publishers,
