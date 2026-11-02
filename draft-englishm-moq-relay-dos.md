@@ -589,6 +589,22 @@ on other subscribers' data);
 and fairness policies for shared resources
 like memory, bandwidth, and backend query capacity.
 
+Limits that a peer grants,
+such as QUIC stream limits and flow control credit,
+are a ceiling on what the relay may send,
+not a target for how much work it should take on.
+A peer can grant very large limits
+precisely to make the relay open more streams,
+buffer more data, or start more upstream work on its behalf.
+A relay that sizes its own work
+to its own per-session and per-subscription budgets,
+rather than to whatever the peer permits,
+keeps that choice with the relay.
+Spreading streams across subscriptions,
+rather than letting one subscription consume
+all the streams a session allows,
+also keeps one subscription from starving others on the same session.
+
 These two goals sit in tension:
 the more independently a relay handles each downstream subscription,
 the less sharing and coalescing it can do upstream,
