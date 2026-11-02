@@ -625,55 +625,116 @@ Table of Contents
    mitigations are being preserved, replaced with equivalent mechanisms,
    or inadvertently weakened.
 
-   +===========================+=================+=====================+
-   | Mechanism                 | Threat          | Notes               |
-   |                           | Mitigated       |                     |
-   +===========================+=================+=====================+
-   | QUIC bidi Stream Limits   | Rapid request   | Limits outstanding  |
-   |                           | flooding;       | requests a peer     |
-   |                           | unbounded state | can issue.  Any     |
-   |                           | commitment      | proposal to remove  |
-   |                           |                 | or change this      |
-   |                           |                 | needs to provide    |
-   |                           |                 | equivalent          |
-   |                           |                 | protection.         |
-   +---------------------------+-----------------+---------------------+
-   | QUIC uni Stream Limits    | Stream          | Baseline            |
-   |                           | exhaustion      | protection.  When   |
-   |                           |                 | used as the         |
-   |                           |                 | primary request-    |
-   |                           |                 | limiting            |
-   |                           |                 | mechanism,          |
-   |                           |                 | configuration       |
-   |                           |                 | needs to account    |
-   |                           |                 | for security        |
-   |                           |                 | implications.       |
-   +---------------------------+-----------------+---------------------+
-   | QUIC Flow Control         | Receiver memory | Protects            |
-   |                           | exhaustion      | individual          |
-   |                           |                 | receivers but does  |
-   |                           |                 | not provide cross-  |
-   |                           |                 | session fairness    |
-   |                           |                 | or state            |
-   |                           |                 | exhaustion          |
-   |                           |                 | protection.         |
-   +---------------------------+-----------------+---------------------+
-   | Subscription Timeouts     | Idle resource   | Lets relays         |
-   |                           | consumption     | reclaim resources   |
-   |                           |                 | from inactive       |
-   |                           |                 | subscriptions.      |
-   +---------------------------+-----------------+---------------------+
-   | MAX_AUTH_TOKEN_CACHE_SIZE | Memory          | Bounds total per-   |
-   |                           | consumption     | session bytes of    |
-   |                           |                 | registered          |
-   |                           |                 | authorization       |
-   |                           |                 | token aliases/      |
-   |                           |                 | values              |
-   +---------------------------+-----------------+---------------------+
-   | Control message length    | Oversized       | Bounds the size of  |
-   | limit (2^16-1)            | control-message | each control        |
-   |                           | parsing DoS     | message             |
-   +---------------------------+-----------------+---------------------+
+   +===========================+===============+=======================+
+   | Mechanism                 |Threat         |Notes                  |
+   |                           |Mitigated      |                       |
+   +===========================+===============+=======================+
+   | QUIC bidi Stream Limits   |Rapid request  |Limits outstanding     |
+   |                           |flooding;      |requests a peer can    |
+   |                           |unbounded state|issue.  Any proposal   |
+   |                           |commitment     |to remove or change    |
+   |                           |               |this needs to provide  |
+   |                           |               |equivalent protection. |
+   +---------------------------+---------------+-----------------------+
+   | QUIC uni Stream Limits    |Stream         |Baseline protection.   |
+   |                           |exhaustion     |When used as the       |
+   |                           |               |primary request-       |
+   |                           |               |limiting mechanism,    |
+   |                           |               |configuration needs to |
+   |                           |               |account for security   |
+   |                           |               |implications.          |
+   +---------------------------+---------------+-----------------------+
+   | QUIC Flow Control         |Receiver memory|Protects individual    |
+   |                           |exhaustion     |receivers but does not |
+   |                           |               |provide cross-session  |
+   |                           |               |fairness or state      |
+   |                           |               |exhaustion protection. |
+   +---------------------------+---------------+-----------------------+
+   | Timeouts (Section 15.6 of |Idle resource  |Let relays reclaim     |
+   | [MOQT]), including        |consumption    |resources from peers   |
+   | delivery timeouts         |               |that do not send       |
+   | (Section 5.2 of [MOQT])   |               |expected data and from |
+   | and EXPIRES               |               |inactive               |
+   | (Section 9.20.16 of       |               |subscriptions.  Values |
+   | [MOQT])                   |               |are implementation-    |
+   |                           |               |chosen.                |
+   +---------------------------+---------------+-----------------------+
+   | MAX_AUTH_TOKEN_CACHE_SIZE |Memory         |Bounds total per-      |
+   |                           |consumption    |session bytes of       |
+   |                           |               |registered             |
+   |                           |               |authorization token    |
+   |                           |               |aliases/values         |
+   +---------------------------+---------------+-----------------------+
+   | Control message length    |Oversized      |Bounds the size of     |
+   | limit (2^16-1)            |control-message|each control message   |
+   |                           |parsing DoS    |                       |
+   +---------------------------+---------------+-----------------------+
+   | MAX_REQUEST_UPDATES       |Rapid          |Bounds outstanding     |
+   | (Section 9.1.7 of [MOQT]) |REQUEST_UPDATE |REQUEST_UPDATEs per    |
+   |                           |churn          |request stream.  The   |
+   |                           |               |default of 0 means no  |
+   |                           |               |limit, so it only      |
+   |                           |               |protects an endpoint   |
+   |                           |               |that advertises a      |
+   |                           |               |value.  It does not    |
+   |                           |               |bound the total number |
+   |                           |               |of updates over time,  |
+   |                           |               |or the number of fill  |
+   |                           |               |fetch streams          |
+   |                           |               |(Section 3.4 of        |
+   |                           |               |[MOQT]) that updates   |
+   |                           |               |open, because each     |
+   |                           |               |response restores a    |
+   |                           |               |credit.                |
+   +---------------------------+---------------+-----------------------+
+   | MAX_FILTER_RANGES         |Per-object     |The default of 0 means |
+   | (Section 9.1.6 of [MOQT]) |filter         |a peer cannot send     |
+   |                           |evaluation     |Range Filters unless   |
+   |                           |cost; growth of|the endpoint           |
+   |                           |aggregated     |advertises support.    |
+   |                           |filter state   |                       |
+   +---------------------------+---------------+-----------------------+
+   | Full Track Name limits    |Oversized      |At most 32 Track       |
+   | (Section 8.7 of [MOQT])   |names;         |Namespace Fields, and  |
+   |                           |namespace      |at most 4,096 bytes    |
+   |                           |lookup and     |for a Full Track Name. |
+   |                           |storage cost   |                       |
+   +---------------------------+---------------+-----------------------+
+   | Relay-chosen              |Subscriptions  |The relay MAY use a    |
+   | RENDEZVOUS_TIMEOUT        |held while     |shorter timeout than   |
+   | (Section 9.20.6 of        |waiting for a  |the subscriber         |
+   | [MOQT])                   |publisher      |requests.              |
+   +---------------------------+---------------+-----------------------+
+   | FILL_TIMEOUT budget       |Unbounded      |A total budget for all |
+   | (Section 3.2.3 of [MOQT], |upstream FETCH |upstream FETCHes       |
+   | Section 9.20.5 of [MOQT]) |work for one   |generated by a single  |
+   |                           |request        |request.  The          |
+   |                           |               |requester supplies the |
+   |                           |               |value, and the relay   |
+   |                           |               |MAY use a shorter one. |
+   +---------------------------+---------------+-----------------------+
+   | One outstanding           |Upstream       |A relay does not       |
+   | NEW_GROUP_REQUEST per     |amplification  |forward a              |
+   | relay (Section 9.20.19 of |of new-group   |NEW_GROUP_REQUEST      |
+   | [MOQT])                   |requests       |while one of its own   |
+   |                           |               |is outstanding, so     |
+   |                           |               |many downstream        |
+   |                           |               |requests collapse into |
+   |                           |               |one.                   |
+   +---------------------------+---------------+-----------------------+
+   | No propagation of invalid |One misbehaving|A relay MUST NOT       |
+   | messages or Objects       |session causing|forward a control      |
+   | (Section 7.6 of [MOQT])   |unrelated      |message or Object that |
+   |                           |sessions to    |caused a session to    |
+   |                           |close          |close.                 |
+   +---------------------------+---------------+-----------------------+
+   | Malformed Objects are not |Cache          |Objects that trigger   |
+   | cached (Section 12.1 of   |poisoning; one |Malformed Track status |
+   | [MOQT])                   |publisher's bad|MUST NOT be cached.    |
+   |                           |data persisting|                       |
+   |                           |for other      |                       |
+   |                           |subscribers    |                       |
+   +---------------------------+---------------+-----------------------+
 
                                   Table 1
 

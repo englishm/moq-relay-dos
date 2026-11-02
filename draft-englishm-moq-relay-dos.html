@@ -2105,9 +2105,9 @@ or inadvertently weakened.<a href="#section-8-2" class="pilcrow">¶</a></p>
             <td class="text-left" rowspan="1" colspan="1">Protects individual receivers but does not provide cross-session fairness or state exhaustion protection.</td>
           </tr>
           <tr>
-            <td class="text-left" rowspan="1" colspan="1">Subscription Timeouts</td>
+            <td class="text-left" rowspan="1" colspan="1">Timeouts (<span><a href="https://datatracker.ietf.org/doc/html/draft-ietf-moq-transport-23#section-15.6" class="relref">Section 15.6</a> of [<a href="#MOQT" class="cite xref">MOQT</a>]</span>), including delivery timeouts (<span><a href="https://datatracker.ietf.org/doc/html/draft-ietf-moq-transport-23#section-5.2" class="relref">Section 5.2</a> of [<a href="#MOQT" class="cite xref">MOQT</a>]</span>) and EXPIRES (<span><a href="https://datatracker.ietf.org/doc/html/draft-ietf-moq-transport-23#section-9.20.16" class="relref">Section 9.20.16</a> of [<a href="#MOQT" class="cite xref">MOQT</a>]</span>)</td>
             <td class="text-left" rowspan="1" colspan="1">Idle resource consumption</td>
-            <td class="text-left" rowspan="1" colspan="1">Lets relays reclaim resources from inactive subscriptions.</td>
+            <td class="text-left" rowspan="1" colspan="1">Let relays reclaim resources from peers that do not send expected data and from inactive subscriptions. Values are implementation-chosen.</td>
           </tr>
           <tr>
             <td class="text-left" rowspan="1" colspan="1">MAX_AUTH_TOKEN_CACHE_SIZE</td>
@@ -2118,6 +2118,46 @@ or inadvertently weakened.<a href="#section-8-2" class="pilcrow">¶</a></p>
             <td class="text-left" rowspan="1" colspan="1">Control message length limit (2^16-1)</td>
             <td class="text-left" rowspan="1" colspan="1">Oversized control-message parsing DoS</td>
             <td class="text-left" rowspan="1" colspan="1">Bounds the size of each control message</td>
+          </tr>
+          <tr>
+            <td class="text-left" rowspan="1" colspan="1">MAX_REQUEST_UPDATES (<span><a href="https://datatracker.ietf.org/doc/html/draft-ietf-moq-transport-23#section-9.1.7" class="relref">Section 9.1.7</a> of [<a href="#MOQT" class="cite xref">MOQT</a>]</span>)</td>
+            <td class="text-left" rowspan="1" colspan="1">Rapid REQUEST_UPDATE churn</td>
+            <td class="text-left" rowspan="1" colspan="1">Bounds outstanding REQUEST_UPDATEs per request stream. The default of 0 means no limit, so it only protects an endpoint that advertises a value. It does not bound the total number of updates over time, or the number of fill fetch streams (<span><a href="https://datatracker.ietf.org/doc/html/draft-ietf-moq-transport-23#section-3.4" class="relref">Section 3.4</a> of [<a href="#MOQT" class="cite xref">MOQT</a>]</span>) that updates open, because each response restores a credit.</td>
+          </tr>
+          <tr>
+            <td class="text-left" rowspan="1" colspan="1">MAX_FILTER_RANGES (<span><a href="https://datatracker.ietf.org/doc/html/draft-ietf-moq-transport-23#section-9.1.6" class="relref">Section 9.1.6</a> of [<a href="#MOQT" class="cite xref">MOQT</a>]</span>)</td>
+            <td class="text-left" rowspan="1" colspan="1">Per-object filter evaluation cost; growth of aggregated filter state</td>
+            <td class="text-left" rowspan="1" colspan="1">The default of 0 means a peer cannot send Range Filters unless the endpoint advertises support.</td>
+          </tr>
+          <tr>
+            <td class="text-left" rowspan="1" colspan="1">Full Track Name limits (<span><a href="https://datatracker.ietf.org/doc/html/draft-ietf-moq-transport-23#section-8.7" class="relref">Section 8.7</a> of [<a href="#MOQT" class="cite xref">MOQT</a>]</span>)</td>
+            <td class="text-left" rowspan="1" colspan="1">Oversized names; namespace lookup and storage cost</td>
+            <td class="text-left" rowspan="1" colspan="1">At most 32 Track Namespace Fields, and at most 4,096 bytes for a Full Track Name.</td>
+          </tr>
+          <tr>
+            <td class="text-left" rowspan="1" colspan="1">Relay-chosen RENDEZVOUS_TIMEOUT (<span><a href="https://datatracker.ietf.org/doc/html/draft-ietf-moq-transport-23#section-9.20.6" class="relref">Section 9.20.6</a> of [<a href="#MOQT" class="cite xref">MOQT</a>]</span>)</td>
+            <td class="text-left" rowspan="1" colspan="1">Subscriptions held while waiting for a publisher</td>
+            <td class="text-left" rowspan="1" colspan="1">The relay MAY use a shorter timeout than the subscriber requests.</td>
+          </tr>
+          <tr>
+            <td class="text-left" rowspan="1" colspan="1">FILL_TIMEOUT budget (<span><a href="https://datatracker.ietf.org/doc/html/draft-ietf-moq-transport-23#section-3.2.3" class="relref">Section 3.2.3</a> of [<a href="#MOQT" class="cite xref">MOQT</a>]</span>, <span><a href="https://datatracker.ietf.org/doc/html/draft-ietf-moq-transport-23#section-9.20.5" class="relref">Section 9.20.5</a> of [<a href="#MOQT" class="cite xref">MOQT</a>]</span>)</td>
+            <td class="text-left" rowspan="1" colspan="1">Unbounded upstream FETCH work for one request</td>
+            <td class="text-left" rowspan="1" colspan="1">A total budget for all upstream FETCHes generated by a single request. The requester supplies the value, and the relay MAY use a shorter one.</td>
+          </tr>
+          <tr>
+            <td class="text-left" rowspan="1" colspan="1">One outstanding NEW_GROUP_REQUEST per relay (<span><a href="https://datatracker.ietf.org/doc/html/draft-ietf-moq-transport-23#section-9.20.19" class="relref">Section 9.20.19</a> of [<a href="#MOQT" class="cite xref">MOQT</a>]</span>)</td>
+            <td class="text-left" rowspan="1" colspan="1">Upstream amplification of new-group requests</td>
+            <td class="text-left" rowspan="1" colspan="1">A relay does not forward a NEW_GROUP_REQUEST while one of its own is outstanding, so many downstream requests collapse into one.</td>
+          </tr>
+          <tr>
+            <td class="text-left" rowspan="1" colspan="1">No propagation of invalid messages or Objects (<span><a href="https://datatracker.ietf.org/doc/html/draft-ietf-moq-transport-23#section-7.6" class="relref">Section 7.6</a> of [<a href="#MOQT" class="cite xref">MOQT</a>]</span>)</td>
+            <td class="text-left" rowspan="1" colspan="1">One misbehaving session causing unrelated sessions to close</td>
+            <td class="text-left" rowspan="1" colspan="1">A relay MUST NOT forward a control message or Object that caused a session to close.</td>
+          </tr>
+          <tr>
+            <td class="text-left" rowspan="1" colspan="1">Malformed Objects are not cached (<span><a href="https://datatracker.ietf.org/doc/html/draft-ietf-moq-transport-23#section-12.1" class="relref">Section 12.1</a> of [<a href="#MOQT" class="cite xref">MOQT</a>]</span>)</td>
+            <td class="text-left" rowspan="1" colspan="1">Cache poisoning; one publisher's bad data persisting for other subscribers</td>
+            <td class="text-left" rowspan="1" colspan="1">Objects that trigger Malformed Track status MUST NOT be cached.</td>
           </tr>
         </tbody>
       </table>
