@@ -1779,7 +1779,7 @@ and processing capacity for framing and scheduling.<a href="#section-5-1" class=
         </h3>
 <p id="section-5.1-1">A relay MUST NOT reorder or drop objects
 on a multi-object stream when forwarding to subscribers
-(see <span><a href="https://datatracker.ietf.org/doc/html/draft-ietf-moq-transport-23#section-7.4" class="relref">Section 7.4</a> of [<a href="#MOQT" class="cite xref">MOQT</a>]</span>).
+(see <span><a href="https://datatracker.ietf.org/doc/html/draft-ietf-moq-transport-23#section-7.5" class="relref">Section 7.5</a> of [<a href="#MOQT" class="cite xref">MOQT</a>]</span>).
 As a result,
 a subscriber that consumes data more slowly than it is produced
 will cause data to accumulate at the relay.
@@ -2195,7 +2195,7 @@ or inadvertently weakened.<a href="#section-8-2" class="pilcrow">¶</a></p>
             <td class="text-left" rowspan="1" colspan="1">Protects individual receivers but does not provide cross-session fairness or state exhaustion protection.</td>
           </tr>
           <tr>
-            <td class="text-left" rowspan="1" colspan="1">Timeouts (<span><a href="https://datatracker.ietf.org/doc/html/draft-ietf-moq-transport-23#section-15.6" class="relref">Section 15.6</a> of [<a href="#MOQT" class="cite xref">MOQT</a>]</span>), including delivery timeouts (<span><a href="https://datatracker.ietf.org/doc/html/draft-ietf-moq-transport-23#section-5.2" class="relref">Section 5.2</a> of [<a href="#MOQT" class="cite xref">MOQT</a>]</span>) and EXPIRES (<span><a href="https://datatracker.ietf.org/doc/html/draft-ietf-moq-transport-23#section-9.20.16" class="relref">Section 9.20.16</a> of [<a href="#MOQT" class="cite xref">MOQT</a>]</span>)</td>
+            <td class="text-left" rowspan="1" colspan="1">Timeouts (<span><a href="https://datatracker.ietf.org/doc/html/draft-ietf-moq-transport-23#section-15.6" class="relref">Section 15.6</a> of [<a href="#MOQT" class="cite xref">MOQT</a>]</span>), including delivery timeouts (<span><a href="https://datatracker.ietf.org/doc/html/draft-ietf-moq-transport-23#section-5.2" class="relref">Section 5.2</a> of [<a href="#MOQT" class="cite xref">MOQT</a>]</span>) and EXPIRES (<span><a href="https://datatracker.ietf.org/doc/html/draft-ietf-moq-transport-23#section-9.19.16" class="relref">Section 9.19.16</a> of [<a href="#MOQT" class="cite xref">MOQT</a>]</span>)</td>
             <td class="text-left" rowspan="1" colspan="1">Idle resource consumption</td>
             <td class="text-left" rowspan="1" colspan="1">Let relays reclaim resources from peers that do not send expected data and from inactive subscriptions. Values are implementation-chosen.</td>
           </tr>
@@ -2205,9 +2205,14 @@ or inadvertently weakened.<a href="#section-8-2" class="pilcrow">¶</a></p>
             <td class="text-left" rowspan="1" colspan="1">Bounds total per-session bytes of registered authorization token aliases/values</td>
           </tr>
           <tr>
-            <td class="text-left" rowspan="1" colspan="1">Control message length limit (2^16-1)</td>
+            <td class="text-left" rowspan="1" colspan="1">MAX_CONTROL_MESSAGE_SIZE (<span><a href="https://datatracker.ietf.org/doc/html/draft-ietf-moq-transport-23#section-9.1.8" class="relref">Section 9.1.8</a> of [<a href="#MOQT" class="cite xref">MOQT</a>]</span>)</td>
             <td class="text-left" rowspan="1" colspan="1">Oversized control-message parsing DoS</td>
-            <td class="text-left" rowspan="1" colspan="1">Bounds the size of each control message</td>
+            <td class="text-left" rowspan="1" colspan="1">Bounds the size of each control message the receiver accepts. The receiver advertises the value, which is at least 65535 and has no upper bound, so a receiver that raises it accepts proportionally more buffered control data per request stream.</td>
+          </tr>
+          <tr>
+            <td class="text-left" rowspan="1" colspan="1">UNAVAILABLE when out of upstream stream credit (<span><a href="https://datatracker.ietf.org/doc/html/draft-ietf-moq-transport-23#section-7.4" class="relref">Section 7.4</a> of [<a href="#MOQT" class="cite xref">MOQT</a>]</span>)</td>
+            <td class="text-left" rowspan="1" colspan="1">One downstream request exhausting a relay's upstream request streams</td>
+            <td class="text-left" rowspan="1" colspan="1">A relay that lacks stream credit to forward a request can fail it immediately with UNAVAILABLE, or wait and fail it with TIMEOUT, rather than holding it indefinitely.</td>
           </tr>
           <tr>
             <td class="text-left" rowspan="1" colspan="1">MAX_REQUEST_UPDATES (<span><a href="https://datatracker.ietf.org/doc/html/draft-ietf-moq-transport-23#section-9.1.7" class="relref">Section 9.1.7</a> of [<a href="#MOQT" class="cite xref">MOQT</a>]</span>)</td>
@@ -2225,22 +2230,22 @@ or inadvertently weakened.<a href="#section-8-2" class="pilcrow">¶</a></p>
             <td class="text-left" rowspan="1" colspan="1">At most 32 Track Namespace Fields, and at most 4,096 bytes for a Full Track Name.</td>
           </tr>
           <tr>
-            <td class="text-left" rowspan="1" colspan="1">Relay-chosen RENDEZVOUS_TIMEOUT (<span><a href="https://datatracker.ietf.org/doc/html/draft-ietf-moq-transport-23#section-9.20.6" class="relref">Section 9.20.6</a> of [<a href="#MOQT" class="cite xref">MOQT</a>]</span>)</td>
+            <td class="text-left" rowspan="1" colspan="1">Relay-chosen RENDEZVOUS_TIMEOUT (<span><a href="https://datatracker.ietf.org/doc/html/draft-ietf-moq-transport-23#section-9.19.6" class="relref">Section 9.19.6</a> of [<a href="#MOQT" class="cite xref">MOQT</a>]</span>)</td>
             <td class="text-left" rowspan="1" colspan="1">Subscriptions held while waiting for a publisher</td>
             <td class="text-left" rowspan="1" colspan="1">The relay MAY use a shorter timeout than the subscriber requests.</td>
           </tr>
           <tr>
-            <td class="text-left" rowspan="1" colspan="1">FILL_TIMEOUT budget (<span><a href="https://datatracker.ietf.org/doc/html/draft-ietf-moq-transport-23#section-3.2.3" class="relref">Section 3.2.3</a> of [<a href="#MOQT" class="cite xref">MOQT</a>]</span>, <span><a href="https://datatracker.ietf.org/doc/html/draft-ietf-moq-transport-23#section-9.20.5" class="relref">Section 9.20.5</a> of [<a href="#MOQT" class="cite xref">MOQT</a>]</span>)</td>
+            <td class="text-left" rowspan="1" colspan="1">FILL_TIMEOUT budget (<span><a href="https://datatracker.ietf.org/doc/html/draft-ietf-moq-transport-23#section-3.2.3" class="relref">Section 3.2.3</a> of [<a href="#MOQT" class="cite xref">MOQT</a>]</span>, <span><a href="https://datatracker.ietf.org/doc/html/draft-ietf-moq-transport-23#section-9.19.5" class="relref">Section 9.19.5</a> of [<a href="#MOQT" class="cite xref">MOQT</a>]</span>)</td>
             <td class="text-left" rowspan="1" colspan="1">Unbounded upstream FETCH work for one request</td>
             <td class="text-left" rowspan="1" colspan="1">A total budget for all upstream FETCHes generated by a single request. The requester supplies the value, and the relay MAY use a shorter one.</td>
           </tr>
           <tr>
-            <td class="text-left" rowspan="1" colspan="1">One outstanding NEW_GROUP_REQUEST per relay (<span><a href="https://datatracker.ietf.org/doc/html/draft-ietf-moq-transport-23#section-9.20.19" class="relref">Section 9.20.19</a> of [<a href="#MOQT" class="cite xref">MOQT</a>]</span>)</td>
+            <td class="text-left" rowspan="1" colspan="1">One outstanding NEW_GROUP_REQUEST per relay (<span><a href="https://datatracker.ietf.org/doc/html/draft-ietf-moq-transport-23#section-9.19.19" class="relref">Section 9.19.19</a> of [<a href="#MOQT" class="cite xref">MOQT</a>]</span>)</td>
             <td class="text-left" rowspan="1" colspan="1">Upstream amplification of new-group requests</td>
             <td class="text-left" rowspan="1" colspan="1">A relay does not forward a NEW_GROUP_REQUEST while one of its own is outstanding, so many downstream requests collapse into one.</td>
           </tr>
           <tr>
-            <td class="text-left" rowspan="1" colspan="1">No propagation of invalid messages or Objects (<span><a href="https://datatracker.ietf.org/doc/html/draft-ietf-moq-transport-23#section-7.6" class="relref">Section 7.6</a> of [<a href="#MOQT" class="cite xref">MOQT</a>]</span>)</td>
+            <td class="text-left" rowspan="1" colspan="1">No propagation of invalid messages or Objects (<span><a href="https://datatracker.ietf.org/doc/html/draft-ietf-moq-transport-23#section-7.7" class="relref">Section 7.7</a> of [<a href="#MOQT" class="cite xref">MOQT</a>]</span>)</td>
             <td class="text-left" rowspan="1" colspan="1">One misbehaving session causing unrelated sessions to close</td>
             <td class="text-left" rowspan="1" colspan="1">A relay MUST NOT forward a control message or Object that caused a session to close.</td>
           </tr>
