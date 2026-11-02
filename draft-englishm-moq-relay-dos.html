@@ -1242,7 +1242,10 @@ focusing on the unique considerations for relays.<a href="#section-abstract-1" c
                 <p id="section-toc.1-1.5.2.2.1"><a href="#section-5.2" class="auto internal xref">5.2</a>.  <a href="#name-join-time-buffering" class="internal xref">Join-Time Buffering</a></p>
 </li>
               <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.5.2.3">
-                <p id="section-toc.1-1.5.2.3.1"><a href="#section-5.3" class="auto internal xref">5.3</a>.  <a href="#name-flow-control-limitations" class="internal xref">Flow Control Limitations</a></p>
+                <p id="section-toc.1-1.5.2.3.1"><a href="#section-5.3" class="auto internal xref">5.3</a>.  <a href="#name-unknown-track-aliases" class="internal xref">Unknown Track Aliases</a></p>
+</li>
+              <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.5.2.4">
+                <p id="section-toc.1-1.5.2.4.1"><a href="#section-5.4" class="auto internal xref">5.4</a>.  <a href="#name-flow-control-limitations" class="internal xref">Flow Control Limitations</a></p>
 </li>
             </ul>
 </li>
@@ -1779,7 +1782,7 @@ a subscriber that consumes data more slowly than it is produced
 will cause data to accumulate at the relay.
 That memory pressure could affect other subscribers
 on the same relay
-(see <a href="#flow-control-limitations" class="auto internal xref">Section 5.3</a> and <a href="#resource-isolation" class="auto internal xref">Section 6.1</a>).
+(see <a href="#flow-control-limitations" class="auto internal xref">Section 5.4</a> and <a href="#resource-isolation" class="auto internal xref">Section 6.1</a>).
 This can happen because the subscriber's network is slow,
 because the subscriber's application isn't consuming data
 fast enough, or because the subscriber is deliberately
@@ -1852,39 +1855,86 @@ skip ahead to the live edge,
 or reduce delivery quality.<a href="#section-5.2-2" class="pilcrow">¶</a></p>
 </section>
 </div>
-<div id="flow-control-limitations">
+<div id="unknown-track-aliases">
 <section id="section-5.3">
-        <h3 id="name-flow-control-limitations">
-<a href="#section-5.3" class="section-number selfRef">5.3. </a><a href="#name-flow-control-limitations" class="section-name selfRef">Flow Control Limitations</a>
+        <h3 id="name-unknown-track-aliases">
+<a href="#section-5.3" class="section-number selfRef">5.3. </a><a href="#name-unknown-track-aliases" class="section-name selfRef">Unknown Track Aliases</a>
         </h3>
-<p id="section-5.3-1">QUIC flow control (<span><a href="https://rfc-editor.org/rfc/rfc9000#section-4" class="relref">Section 4</a> of [<a href="#RFC9000" class="cite xref">QUIC</a>]</span>) protects receivers
+<p id="section-5.3-1">Objects can arrive on a data stream or in a datagram
+before the control message that associates their Track Alias
+with a subscription.
+<span><a href="https://datatracker.ietf.org/doc/html/draft-ietf-moq-transport-23#section-3.1.3.1" class="relref">Section 3.1.3.1</a> of [<a href="#MOQT" class="cite xref">MOQT</a>]</span> allows the receiver
+to drop such data or to buffer it briefly,
+and to withhold stream flow control beyond the stream header
+until the Track Alias is established.
+It does not say how much to buffer or for how long,
+and the sender chooses the Track Alias values,
+so a receiver cannot tell in advance
+which aliases will turn out to be valid.
+A peer, whether misbehaving or merely slow to send its control messages,
+can therefore make a relay hold data it cannot yet attribute
+to any subscription or account against any limit
+tied to a subscription.<a href="#section-5.3-1" class="pilcrow">¶</a></p>
+<p id="section-5.3-2">A relay that buffers data for unknown Track Aliases
+can bound it in two dimensions:
+how long it waits for the alias to be established,
+and how much data it holds while waiting,
+both per session and across the relay.
+Withholding stream flow control
+bounds the amount of data the peer can send on those streams,
+though it does not bound the number of streams opened,
+which remains limited by QUIC stream limits.<a href="#section-5.3-2" class="pilcrow">¶</a></p>
+<p id="section-5.3-3">Context can inform these limits.
+Data that could plausibly belong to a request
+the relay itself has sent and not yet seen answered,
+such as a pending SUBSCRIBE,
+is more likely to be legitimate than unsolicited data
+on a session where the relay does not expect to receive PUBLISH.
+A relay can reasonably wait longer or hold more
+in the first case than in the second.<a href="#section-5.3-3" class="pilcrow">¶</a></p>
+<p id="section-5.3-4">When a relay discards buffered data under resource pressure,
+discarding everything for the affected Track Alias,
+rather than individual Subgroups,
+avoids leaving gaps that are hard to account for
+if the alias later turns out to be valid.
+The sender is not told why its streams were reset,
+so it cannot distinguish this from other stream resets.
+Datagrams with an unknown Track Alias can simply be dropped.<a href="#section-5.3-4" class="pilcrow">¶</a></p>
+</section>
+</div>
+<div id="flow-control-limitations">
+<section id="section-5.4">
+        <h3 id="name-flow-control-limitations">
+<a href="#section-5.4" class="section-number selfRef">5.4. </a><a href="#name-flow-control-limitations" class="section-name selfRef">Flow Control Limitations</a>
+        </h3>
+<p id="section-5.4-1">QUIC flow control (<span><a href="https://rfc-editor.org/rfc/rfc9000#section-4" class="relref">Section 4</a> of [<a href="#RFC9000" class="cite xref">QUIC</a>]</span>) protects receivers
 from memory exhaustion,
-but its protections have limits that are worth understanding:<a href="#section-5.3-1" class="pilcrow">¶</a></p>
-<span class="break"></span><dl class="dlParallel" id="section-5.3-2">
-          <dt id="section-5.3-2.1">Within a single MoQT session:</dt>
-          <dd style="margin-left: 1.5em" id="section-5.3-2.2">
-            <p id="section-5.3-2.2.1">QUIC flow control operates at the connection and stream level.
+but its protections have limits that are worth understanding:<a href="#section-5.4-1" class="pilcrow">¶</a></p>
+<span class="break"></span><dl class="dlParallel" id="section-5.4-2">
+          <dt id="section-5.4-2.1">Within a single MoQT session:</dt>
+          <dd style="margin-left: 1.5em" id="section-5.4-2.2">
+            <p id="section-5.4-2.2.1">QUIC flow control operates at the connection and stream level.
 MoQT's prioritization mechanism intentionally allows
 higher-priority subscriptions to consume resources
 at the expense of lower-priority ones —
 that is by design for media delivery.
 But it means a single high-priority subscription
 can starve other subscriptions within the same session,
-and QUIC flow control will not prevent it.<a href="#section-5.3-2.2.1" class="pilcrow">¶</a></p>
+and QUIC flow control will not prevent it.<a href="#section-5.4-2.2.1" class="pilcrow">¶</a></p>
 </dd>
           <dd class="break"></dd>
-<dt id="section-5.3-2.3">Across multiple MoQT sessions:</dt>
-          <dd style="margin-left: 1.5em" id="section-5.3-2.4">
-            <p id="section-5.3-2.4.1">Flow control on one session does not prevent
+<dt id="section-5.4-2.3">Across multiple MoQT sessions:</dt>
+          <dd style="margin-left: 1.5em" id="section-5.4-2.4">
+            <p id="section-5.4-2.4.1">Flow control on one session does not prevent
 a slow subscriber on that session
 from causing resource accumulation
 that affects other sessions at the same relay.
 A relay must manage cross-session resource allocation
-independently.<a href="#section-5.3-2.4.1" class="pilcrow">¶</a></p>
+independently.<a href="#section-5.4-2.4.1" class="pilcrow">¶</a></p>
 </dd>
         <dd class="break"></dd>
 </dl>
-<p id="section-5.3-3">MoQT does not currently provide
+<p id="section-5.4-3">MoQT does not currently provide
 per-subscription resource isolation.
 Within a session,
 a single subscription can consume
@@ -1898,7 +1948,7 @@ Relays can implement fairness policies across sessions —
 such as per-session buffer caps
 or weighted bandwidth allocation —
 to prevent one subscriber's behavior
-from degrading service for others.<a href="#section-5.3-3" class="pilcrow">¶</a></p>
+from degrading service for others.<a href="#section-5.4-3" class="pilcrow">¶</a></p>
 </section>
 </div>
 </section>
