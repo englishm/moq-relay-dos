@@ -477,10 +477,9 @@ and processing capacity for framing and scheduling.
 ## Slow Subscribers
 
 A relay MUST NOT reorder or drop objects
-on a multi-object stream when forwarding to subscribers,
-absent application-specific information
+on a multi-object stream when forwarding to subscribers
 (see {{Section 7.4 of MOQT}}).
-Without such information,
+As a result,
 a subscriber that consumes data more slowly than it is produced
 will cause data to accumulate at the relay.
 That memory pressure could affect other subscribers
@@ -492,14 +491,25 @@ fast enough, or because the subscriber is deliberately
 not consuming data at all.
 
 Objects sent on QUIC streams are reliably delivered,
-so the relay's only mechanism to bound buffering
-is to terminate the subscription entirely
-by resetting the stream.
-The relay cannot selectively drop individual objects
-while keeping the subscription active,
-which means any resource bound requires full termination —
-creating a denial-of-service risk
-where the only defense disrupts service.
+so a relay cannot skip individual objects
+within a Subgroup stream.
+The smallest unit it can shed is a whole stream:
+resetting a Subgroup stream ends delivery of that Subgroup
+but leaves the subscription in place,
+and later Groups are delivered on new streams
+(see {{Section 11.3.2 of MOQT}}).
+When an endpoint reaches a resource limit,
+{{Section 15.5 of MOQT}} requires it to cancel a stream,
+preferably the one with the lowest priority.
+Shedding a stream still disrupts the subscriber,
+which loses the rest of that Subgroup
+and may need to FETCH it,
+but the disruption is limited to that stream
+rather than the whole subscription.
+Ending the subscription
+(for example, with PUBLISH_DONE and the TOO_FAR_BEHIND status code)
+remains available
+when a subscriber is persistently unable to keep up.
 Objects sent as datagrams can simply be dropped
 when a buffer forms,
 which naturally limits accumulation
@@ -511,10 +521,14 @@ to the upstream publisher on behalf of one slow subscriber
 without affecting other downstream subscribers of that track.
 
 Relays that detect and handle slow subscribers
-can limit this accumulation. Options include canceling
-subscriptions that fall too far behind the live edge,
-and imposing per-subscriber buffer limits
-(see {{Section 5.2 of MOQT}}).
+can limit this accumulation.
+Options include
+imposing per-subscriber buffer limits,
+resetting the lowest-priority streams of a subscriber that exceeds them,
+relying on delivery timeouts to reset streams
+whose Objects are no longer useful
+(see {{Section 5.2 of MOQT}}),
+and ending subscriptions that remain too far behind the live edge.
 
 ## Join-Time Buffering
 
