@@ -1259,7 +1259,10 @@ focusing on the unique considerations for relays.<a href="#section-abstract-1" c
                 <p id="section-toc.1-1.6.2.2.1"><a href="#section-6.2" class="auto internal xref">6.2</a>.  <a href="#name-upstream-load-protection" class="internal xref">Upstream Load Protection</a></p>
 </li>
               <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.6.2.3">
-                <p id="section-toc.1-1.6.2.3.1"><a href="#section-6.3" class="auto internal xref">6.3</a>.  <a href="#name-multi-publisher-fan-out" class="internal xref">Multi-Publisher Fan-Out</a></p>
+                <p id="section-toc.1-1.6.2.3.1"><a href="#section-6.3" class="auto internal xref">6.3</a>.  <a href="#name-paused-subscriptions" class="internal xref">Paused Subscriptions</a></p>
+</li>
+              <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.6.2.4">
+                <p id="section-toc.1-1.6.2.4.1"><a href="#section-6.4" class="auto internal xref">6.4</a>.  <a href="#name-multi-publisher-fan-out" class="internal xref">Multi-Publisher Fan-Out</a></p>
 </li>
             </ul>
 </li>
@@ -2021,19 +2024,56 @@ and shedding downstream load
 rather than passing it through to upstream peers.<a href="#section-6.2-2" class="pilcrow">¶</a></p>
 </section>
 </div>
-<div id="multi-publisher-fan-out">
+<div id="paused-subscriptions">
 <section id="section-6.3">
-        <h3 id="name-multi-publisher-fan-out">
-<a href="#section-6.3" class="section-number selfRef">6.3. </a><a href="#name-multi-publisher-fan-out" class="section-name selfRef">Multi-Publisher Fan-Out</a>
+        <h3 id="name-paused-subscriptions">
+<a href="#section-6.3" class="section-number selfRef">6.3. </a><a href="#name-paused-subscriptions" class="section-name selfRef">Paused Subscriptions</a>
         </h3>
-<p id="section-6.3-1">When a relay serves content from multiple publishers,
+<p id="section-6.3-1">A subscription can be paused,
+in which case the publisher sends no Objects on it
+until it is resumed
+(see <span><a href="https://datatracker.ietf.org/doc/html/draft-ietf-moq-transport-23#section-3.1.1" class="relref">Section 3.1.1</a> of [<a href="#MOQT" class="cite xref">MOQT</a>]</span>).
+A paused subscription costs the subscriber little
+but still occupies state at the relay,
+and when it is the only downstream subscription for a Track
+it can still cause upstream work.
+When all downstream subscriptions to a Track are paused,
+the relay decides whether to pause its upstream subscription
+(see <span><a href="https://datatracker.ietf.org/doc/html/draft-ietf-moq-transport-23#section-7.2" class="relref">Section 7.2</a> of [<a href="#MOQT" class="cite xref">MOQT</a>]</span>).
+Leaving it unpaused keeps the relay's cache warm
+so that a resumed subscriber is served quickly,
+but it pulls content from the publisher
+that no subscriber is currently receiving.
+A subscriber that opens many paused subscriptions
+could use this to drive upstream traffic and cache use
+at almost no cost to itself.<a href="#section-6.3-1" class="pilcrow">¶</a></p>
+<p id="section-6.3-2">Counting paused subscriptions against the same per-session
+and per-identity limits as active ones prevents them
+from being a cheap way to accumulate relay state.
+Keeping upstream subscriptions unpaused
+is most appropriate when there is reason to expect
+that a downstream subscriber will resume soon,
+for example for popular content,
+and less so for Tracks requested only by paused subscriptions
+from a single session.
+Rapid toggling between paused and unpaused
+is another form of the rapid request cycles
+described in <a href="#rapid-request-cycles" class="auto internal xref">Section 4.2</a>.<a href="#section-6.3-2" class="pilcrow">¶</a></p>
+</section>
+</div>
+<div id="multi-publisher-fan-out">
+<section id="section-6.4">
+        <h3 id="name-multi-publisher-fan-out">
+<a href="#section-6.4" class="section-number selfRef">6.4. </a><a href="#name-multi-publisher-fan-out" class="section-name selfRef">Multi-Publisher Fan-Out</a>
+        </h3>
+<p id="section-6.4-1">When a relay serves content from multiple publishers,
 subscriber operations can fan out upstream
 in ways that may not be obvious
 from the subscriber's perspective.
 Multi-publisher scenarios introduce additional
 fan-out and resource isolation considerations
 that need further analysis.
-This section will be expanded in future revisions.<a href="#section-6.3-1" class="pilcrow">¶</a></p>
+This section will be expanded in future revisions.<a href="#section-6.4-1" class="pilcrow">¶</a></p>
 </section>
 </div>
 </section>
