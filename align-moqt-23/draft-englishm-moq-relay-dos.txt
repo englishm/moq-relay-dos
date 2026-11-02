@@ -741,6 +741,16 @@ Table of Contents
    |                           |               |buffered control data  |
    |                           |               |per request stream.    |
    +---------------------------+---------------+-----------------------+
+   | UNAVAILABLE when out of   |One downstream |A relay that lacks     |
+   | upstream stream credit    |request        |stream credit to       |
+   | (Section 7.4 of [MOQT])   |exhausting a   |forward a request can  |
+   |                           |relay's        |fail it immediately    |
+   |                           |upstream       |with UNAVAILABLE, or   |
+   |                           |request streams|wait and fail it with  |
+   |                           |               |TIMEOUT, rather than   |
+   |                           |               |holding it             |
+   |                           |               |indefinitely.          |
+   +---------------------------+---------------+-----------------------+
    | MAX_REQUEST_UPDATES       |Rapid          |Bounds outstanding     |
    | (Section 9.1.7 of [MOQT]) |REQUEST_UPDATE |REQUEST_UPDATEs per    |
    |                           |churn          |request stream.  The   |

@@ -2210,6 +2210,11 @@ or inadvertently weakened.<a href="#section-8-2" class="pilcrow">¶</a></p>
             <td class="text-left" rowspan="1" colspan="1">Bounds the size of each control message the receiver accepts. The receiver advertises the value, which is at least 65535 and has no upper bound, so a receiver that raises it accepts proportionally more buffered control data per request stream.</td>
           </tr>
           <tr>
+            <td class="text-left" rowspan="1" colspan="1">UNAVAILABLE when out of upstream stream credit (<span><a href="https://datatracker.ietf.org/doc/html/draft-ietf-moq-transport-23#section-7.4" class="relref">Section 7.4</a> of [<a href="#MOQT" class="cite xref">MOQT</a>]</span>)</td>
+            <td class="text-left" rowspan="1" colspan="1">One downstream request exhausting a relay's upstream request streams</td>
+            <td class="text-left" rowspan="1" colspan="1">A relay that lacks stream credit to forward a request can fail it immediately with UNAVAILABLE, or wait and fail it with TIMEOUT, rather than holding it indefinitely.</td>
+          </tr>
+          <tr>
             <td class="text-left" rowspan="1" colspan="1">MAX_REQUEST_UPDATES (<span><a href="https://datatracker.ietf.org/doc/html/draft-ietf-moq-transport-23#section-9.1.7" class="relref">Section 9.1.7</a> of [<a href="#MOQT" class="cite xref">MOQT</a>]</span>)</td>
             <td class="text-left" rowspan="1" colspan="1">Rapid REQUEST_UPDATE churn</td>
             <td class="text-left" rowspan="1" colspan="1">Bounds outstanding REQUEST_UPDATEs per request stream. The default of 0 means no limit, so it only protects an endpoint that advertises a value. It does not bound the total number of updates over time, or the number of fill fetch streams (<span><a href="https://datatracker.ietf.org/doc/html/draft-ietf-moq-transport-23#section-3.4" class="relref">Section 3.4</a> of [<a href="#MOQT" class="cite xref">MOQT</a>]</span>) that updates open, because each response restores a credit.</td>
