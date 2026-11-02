@@ -398,7 +398,12 @@ Table of Contents
 
    Rapid REQUEST_UPDATE messages still consume network and parsing
    resources, but coalescing prevents them from causing proportional
-   scheduling work at the relay.
+   scheduling work at the relay.  Coalescing does not apply to every
+   update: a REQUEST_UPDATE carrying FILL_PARAMETERS or
+   TRACK_NAMESPACE_PREFIX cannot be coalesced with other REQUEST_UPDATEs
+   (see Section 9.19.15 of [MOQT] and Section 9.19.20 of [MOQT]), so
+   floods of those updates need other limits, such as
+   MAX_REQUEST_UPDATES.
 
 4.3.  Namespace Advertisement Flooding
 
@@ -687,6 +692,18 @@ Table of Contents
    protocol changes, it is worth considering whether existing
    mitigations are being preserved, replaced with equivalent mechanisms,
    or inadvertently weakened.
+
+   Some mechanisms present in earlier revisions of [MOQT] have since
+   been removed or relaxed.  The PREFIX_OVERLAP error, which prevented a
+   session from holding overlapping SUBSCRIBE_NAMESPACE or
+   SUBSCRIBE_TRACKS requests, no longer exists, so a Track matching
+   several overlapping SUBSCRIBE_TRACKS results in a PUBLISH for each
+   (see Section 3.6 of [MOQT]).  Detecting duplicate Request IDs is no
+   longer required (see Section 6.4.2.1 of [MOQT]), which avoids
+   unbounded per-session state; reusing a Request ID is still
+   prohibited, but a receiver that does not track them may not notice a
+   peer that does.  The fixed 2^16-1 control message length has been
+   replaced by MAX_CONTROL_MESSAGE_SIZE.
 
    +===========================+===============+=======================+
    | Mechanism                 |Threat         |Notes                  |

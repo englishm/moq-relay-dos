@@ -1730,7 +1730,14 @@ only the final value needs to be applied.<a href="#section-4.2.1-1" class="pilcr
 still consume network and parsing resources,
 but coalescing prevents them
 from causing proportional scheduling work
-at the relay.<a href="#section-4.2.1-2" class="pilcrow">¶</a></p>
+at the relay.
+Coalescing does not apply to every update:
+a REQUEST_UPDATE carrying FILL_PARAMETERS
+or TRACK_NAMESPACE_PREFIX
+cannot be coalesced with other REQUEST_UPDATEs
+(see <span><a href="https://datatracker.ietf.org/doc/html/draft-ietf-moq-transport-23#section-9.19.15" class="relref">Section 9.19.15</a> of [<a href="#MOQT" class="cite xref">MOQT</a>]</span> and <span><a href="https://datatracker.ietf.org/doc/html/draft-ietf-moq-transport-23#section-9.19.20" class="relref">Section 9.19.20</a> of [<a href="#MOQT" class="cite xref">MOQT</a>]</span>),
+so floods of those updates need other limits,
+such as MAX_REQUEST_UPDATES.<a href="#section-4.2.1-2" class="pilcrow">¶</a></p>
 </section>
 </div>
 </section>
@@ -2169,6 +2176,22 @@ it is worth considering
 whether existing mitigations are being preserved,
 replaced with equivalent mechanisms,
 or inadvertently weakened.<a href="#section-8-2" class="pilcrow">¶</a></p>
+<p id="section-8-3">Some mechanisms present in earlier revisions of <span>[<a href="#MOQT" class="cite xref">MOQT</a>]</span>
+have since been removed or relaxed.
+The PREFIX_OVERLAP error,
+which prevented a session from holding overlapping
+SUBSCRIBE_NAMESPACE or SUBSCRIBE_TRACKS requests,
+no longer exists,
+so a Track matching several overlapping SUBSCRIBE_TRACKS
+results in a PUBLISH for each
+(see <span><a href="https://datatracker.ietf.org/doc/html/draft-ietf-moq-transport-23#section-3.6" class="relref">Section 3.6</a> of [<a href="#MOQT" class="cite xref">MOQT</a>]</span>).
+Detecting duplicate Request IDs is no longer required
+(see <span><a href="https://datatracker.ietf.org/doc/html/draft-ietf-moq-transport-23#section-6.4.2.1" class="relref">Section 6.4.2.1</a> of [<a href="#MOQT" class="cite xref">MOQT</a>]</span>),
+which avoids unbounded per-session state;
+reusing a Request ID is still prohibited,
+but a receiver that does not track them may not notice a peer that does.
+The fixed 2^16-1 control message length
+has been replaced by MAX_CONTROL_MESSAGE_SIZE.<a href="#section-8-3" class="pilcrow">¶</a></p>
 <table class="center" id="table-1">
         <caption><a href="#table-1" class="selfRef">Table 1</a></caption>
 <thead>
