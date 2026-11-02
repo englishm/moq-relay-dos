@@ -1,0 +1,19 @@
+draft-englishm-moq-relay-dos.md
+  s_ca018b6cf797cb::t_c22a7c7249a0ce 843
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.10",
+  "base_commit_sha": "63222397cb4813e7aa6b06ac5f2c69f40554dd4f",
+  "prompts": {},
+  "sessions": {
+    "s_ca018b6cf797cb": {
+      "agent_id": {
+        "tool": "opencode",
+        "id": "ses_e77df8fa2ffeqZThr3NIX1TSOe",
+        "model": "claude-opus-5-5-1m"
+      },
+      "human_author": "Mike English <menglish@cloudflare.com>"
+    }
+  }
+}
