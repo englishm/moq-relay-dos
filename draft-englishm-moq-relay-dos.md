@@ -31,7 +31,7 @@ author:
     email: "ietf@englishm.net"
  -
     fullname: "Lucas Pardue"
-    organization: Cloudflare
+    organization: Apple
     email: "lucas@lucaspardue.com"
  -
     fullname: "Aman Sharma"
